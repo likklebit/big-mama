@@ -620,6 +620,11 @@
 
         /* ----- RESPONSIVE ----- */
         @media (max-width: 500px) {
+            body {
+                overflow-y: auto; /* Let the body scroll naturally on mobile */
+                align-items: flex-start; /* Start card at the top instead of forcing vertical centering */
+                padding: 20px 0; /* Add a little breathing room at the top and bottom */
+            }
             #lock-screen, #delivery-screen {
                 padding: 2.5rem 1.5rem;
                 border-radius: 32px;
@@ -628,14 +633,17 @@
                 font-size: 2rem;
             }
             .card {
-                padding: 2rem 1.5rem 1.8rem;
+                padding: 1.8rem 1.2rem 1.5rem; /* Slightly tighter padding to save space */
                 border-radius: 32px;
+                max-height: none; /* Let the card grow naturally with its contents */
+                overflow-y: visible; /* Hand off scroll duty to the body */
             }
             .header .greeting {
                 font-size: 2.2rem;
             }
             .message-box {
-                padding: 1.2rem 1.4rem;
+                padding: 1.2rem 1.1rem;
+                margin: 1rem 0;
             }
             #typewriter {
                 font-size: 0.95rem;
@@ -661,7 +669,6 @@
                 height: 38px;
             }
         }
-
         @media (max-width: 380px) {
             .header .greeting {
                 font-size: 1.8rem;
