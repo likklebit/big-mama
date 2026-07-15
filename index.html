@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For You 💕</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ----- RESET & BASE ----- */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0b081a;
+            overflow: hidden;
+        }
+
+        /* ----- ANIMATED BACKGROUND ----- */
+        .bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0b081a 0%, #1a0f2e 25%, #2d1b3d 50%, #1a0f2e 75%, #0b081a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 18s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ----- FLOATING PARTICLES (stars) ----- */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            animation: floatParticle linear infinite;
+            box-shadow: 0 0 12px rgba(255, 200, 255, 0.3);
+            transition: transform 0.5s ease;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Particle Warp Speed effect (triggered on Surprise) */
+        .warp .particle {
+            animation-duration: 0.8s !important;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        /* ----- HEART RAIN (background floating hearts) ----- */
+        .heart-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .heart-rain span {
+            position: absolute;
+            display: block;
+            font-size: 1.6rem;
+            animation: heartFall linear infinite;
+            opacity: 0.25;
+            user-select: none;
+        }
+
+        @keyframes heartFall {
+            0% { transform: translateY(-10vh) rotate(0deg) scale(0.6); opacity: 0; }
+            10% { opacity: 0.25; }
+            90% { opacity: 0.25; }
+            100% { transform: translateY(110vh) rotate(720deg) scale(1.2); opacity: 0; }
+        }
+
+        /* ----- COMMON CONTAINER GLASS STYLE ----- */
+        .glass-panel {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            text-align: center;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ----- 1. LOCK SCREEN ----- */
+        #lock-screen {
+            max-width: 420px;
+            width: 92%;
+            padding: 3.5rem 2.5rem;
+            border-radius: 40px;
+        }
+
+        .lock-heart {
+            font-size: 3rem;
+            color: #ff6b9d;
+            margin-bottom: 1.5rem;
+            animation: pulse 1.5s infinite;
+            display: inline-block;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
+            100% { transform: scale(1); }
+        }
+
+        .glass-panel h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
+        }
+
+        .lock-input-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .lock-input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            color: #fff;
+            font-size: 1.1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .lock-input:focus {
+            border-color: #ff6b9d;
+            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .cosmic-btn {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 12px 35px;
+            border: none;
+            border-radius: 60px;
+            background: rgba(255, 107, 157, 0.2);
+            color: #fff;
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cosmic-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 107, 157, 0.35);
+            border-color: rgba(255, 107, 157, 0.5);
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.3);
+        }
+
+        .error-message {
+            color: #ff4a7d;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+            font-weight: 600;
+        }
+
+        /* ----- 2. INTERMEDIATE PAGE (SPECIAL DELIVERY) ----- */
+        #delivery-screen {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            max-width: 460px;
+            width: 92%;
+            padding: 4rem 2.5rem;
+            border-radius: 40px;
+        }
+
+        .cosmic-envelope {
+            font-size: 4.5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            animation: floatEnvelope 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(255, 155, 203, 0.4));
+        }
+
+        @keyframes floatEnvelope {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        #delivery-screen p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+
+        /* ----- 3. MAIN CARD ----- */
+        .card {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            max-width: 620px;
+            width: 92%;
+            padding: 3rem 2.5rem 2.5rem;
+            border-radius: 48px;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .card::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .card::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* ----- HEADER ----- */
+        .header {
+            margin-bottom: 1.2rem;
+        }
+
+        .header .greeting {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
+            line-height: 1.2;
+        }
+
+        .header .greeting .name {
+            color: #ff9bcb;
+            background: linear-gradient(135deg, #ff9bcb, #ff6b9d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ----- TYPEWRITER MESSAGE ----- */
+        .message-box {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #typewriter {
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.8;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        #typewriter .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: #ff9bcb;
+            margin-left: 4px;
+            vertical-align: text-bottom;
+            animation: blink 0.9s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* ----- MUSIC PLAYER ----- */
+        .music-player {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 24px;
+            padding: 12px 18px;
+            margin: 1.2rem 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .player-disc {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 50%, #1c1c1c 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .player-disc::after {
+            content: '';
+            width: 14px;
+            height: 14px;
+            background: #0b081a;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 155, 203, 0.5);
+        }
+
+        /* Vinyl Spin Animation */
+        .player-disc.playing {
+            animation: spinDisc 4s linear infinite;
+        }
+
+        @keyframes spinDisc {
+            100% { transform: rotate(360deg); }
+        }
+
+        .player-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .track-title {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-artist {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .play-pause-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .play-pause-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.08);
+        }
+
+        /* ----- INTERACTIVE ROW ----- */
+        .interactive-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .interactive-row button {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 60px;
+            background: rgba(255, 107, 157, 0.2);
+            color: #fff;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .interactive-row button:hover {
+            transform: translateY(-3px) scale(1.03);
+            background: rgba(255, 107, 157, 0.35);
+            border-color: rgba(255, 107, 157, 0.5);
+            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.35);
+        }
+
+        .interactive-row button:active {
+            transform: scale(0.95);
+        }
+
+        .interactive-row button .emoji {
+            font-size: 1.2rem;
+        }
+
+        /* ----- GIANT VINYL DISC STYLING ----- */
+        .player-disc.giant-disc {
+            width: 240px;
+            height: 240px;
+            border-width: 6px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        .player-disc.giant-disc::after {
+            width: 50px;
+            height: 50px;
+            border-width: 4px;
+        }
+
+        /* ----- FLOATING HEARTS (click spawn) ----- */
+        .spawn-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 50;
+            font-size: 2rem;
+            animation: heartSpawn 1.8s ease-out forwards;
+            user-select: none;
+        }
+
+        @keyframes heartSpawn {
+            0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.6) rotate(40deg); opacity: 0; }
+        }
+
+        /* ----- SURPRISE OVERLAY ----- */
+        .surprise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .surprise-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .surprise-overlay .surprise-content {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 60px;
+            padding: 2.4rem 3rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            max-width: 450px;
+            width: 90%;
+        }
+
+        .surprise-overlay.show .surprise-content {
+            transform: scale(1);
+        }
+
+        .surprise-overlay .surprise-content h2 {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .surprise-overlay .surprise-content .close-surprise {
+            margin-top: 1.5rem;
+            padding: 8px 28px;
+            border: none;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .surprise-overlay .surprise-content .close-surprise:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ----- SPECIAL SURPRISE TICKET DESIGN ----- */
+        .surprise-overlay .surprise-content {
+            border: 2px dashed rgba(255, 215, 0, 0.4);
+            box-shadow: 0 40px 100px rgba(255, 215, 0, 0.15);
+        }
+
+        .ticket-wrapper {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 100, 150, 0.05) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Rotating Cosmic background for surprise ticket */
+        .ticket-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: spinDisc 8s linear infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .ticket-inner {
+            position: relative;
+            z-index: 2;
+        }
+
+        .ticket-icon {
+            font-size: 3rem;
+            margin-bottom: 8px;
+            display: inline-block;
+            animation: floatEnvelope 2.5s ease-in-out infinite;
+        }
+
+        .ticket-title {
+            color: #ffd700;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 6px;
+        }
+
+        .ticket-text {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* ----- RESPONSIVE ----- */
+        @media (max-width: 500px) {
+            #lock-screen, #delivery-screen {
+                padding: 2.5rem 1.5rem;
+                border-radius: 32px;
+            }
+            #lock-screen h1, #delivery-screen h1 {
+                font-size: 2rem;
+            }
+            .card {
+                padding: 2rem 1.5rem 1.8rem;
+                border-radius: 32px;
+            }
+            .header .greeting {
+                font-size: 2.2rem;
+            }
+            .message-box {
+                padding: 1.2rem 1.4rem;
+            }
+            #typewriter {
+                font-size: 0.95rem;
+            }
+            .interactive-row button {
+                font-size: 0.9rem;
+                padding: 10px 24px;
+            }
+            .surprise-overlay .surprise-content {
+                padding: 1.8rem 1.6rem;
+                border-radius: 40px;
+                margin: 0 20px;
+            }
+            .surprise-overlay .surprise-content h2 {
+                font-size: 1.4rem;
+            }
+            .player-disc.giant-disc {
+                width: 180px;
+                height: 180px;
+            }
+            .player-disc.giant-disc::after {
+                width: 38px;
+                height: 38px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .header .greeting {
+                font-size: 1.8rem;
+            }
+            #typewriter {
+                font-size: 0.85rem;
+            }
+            .interactive-row button {
+                font-size: 0.8rem;
+                padding: 8px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-canvas" id="bgCanvas"></div>
+
+    <div id="particles"></div>
+
+    <div class="heart-rain" id="heartRain"></div>
+
+    <div id="lock-screen" class="glass-panel">
+        <div class="lock-heart">💖</div>
+        <h1>Enter the secret code</h1>
+        <div class="lock-input-group">
+            <input type="password" id="secretCodeInput" class="lock-input" placeholder="Give me the password...">
+            <div class="error-message" id="errorMsg">That's not it, my love! Try again. 💕</div>
+        </div>
+        <button class="cosmic-btn" onclick="checkPassword()">Unlock</button>
+    </div>
+
+    <!-- INTERMEDIATE DELIVERY SCREEN WITH SILLY BUTTON TRICK -->
+    <div id="delivery-screen" class="glass-panel">
+        <div class="cosmic-envelope">💌</div>
+        <h1>A Special Delivery</h1>
+        <p>Your secret code unlocked a private transmission. Ready to open your surprise?</p>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 1rem; position: relative; min-height: 80px;">
+            <button id="openGiftBtn" class="cosmic-btn" onclick="openMessage()" style="transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">Open My Gift 🎁</button>
+            <button id="dontClickBtn" class="cosmic-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; white-space: nowrap;">Don't click me🫣</button>
+        </div>
+    </div>
+
+    <!-- MAIN PAGE CARD -->
+    <div class="card glass-panel" id="mainCard">
+
+        <div class="header">
+            <div class="greeting">
+                hey <span class="name" id="herName">[Her Name]</span> 👋
+            </div>
+        </div>
+
+        <div class="message-box">
+            <div id="typewriter">
+                <span id="messageText"></span><span class="cursor"></span>
+            </div>
+        </div>
+
+        <div class="music-player">
+            <div class="player-disc" id="playerDisc"></div>
+            <div class="player-info">
+                <div class="track-title" id="trackTitle">Loading song...</div>
+                <div class="track-artist" id="trackArtist">Please wait</div>
+            </div>
+            <div class="player-controls">
+                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
+            </div>
+            <audio id="bgMusic" loop src=""></audio>
+        </div>
+
+        <div class="interactive-row">
+            <button id="surpriseBtn">
+                <span class="emoji">🎁</span> surprise!
+            </button>
+            <button id="favSongBtn">
+                <span class="emoji">🎵</span> ma new favorite song
+            </button>
+        </div>
+    </div>
+
+    <!-- NEW FAVORITE SONG CARD PAGE -->
+    <div class="card glass-panel" id="songCard">
+        <div style="text-align: left; margin-bottom: 1.5rem;">
+            <button class="cosmic-btn" onclick="backToMain()" style="padding: 8px 20px; font-size: 0.9rem;">
+                ← Back
+            </button>
+        </div>
+        
+        <div style="display: flex; justify-content: center; align-items: center; margin: 2rem 0;">
+            <div class="player-disc giant-disc" id="giantPlayerDisc"></div>
+        </div>
+
+        <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
+            <h2 id="favSongTitle" style="color: #fff; font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255, 155, 203, 0.4);">Loading song...</h2>
+            <p id="favSongArtist" style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; font-weight: 600;">Please wait</p>
+        </div>
+
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <button class="play-pause-btn" id="favPlayPauseBtn" onclick="toggleFavPlay()" style="width: 60px; height: 60px; font-size: 1.6rem; background: rgba(255, 107, 157, 0.2); border: 1px solid rgba(255, 107, 157, 0.4);">▶</button>
+        </div>
+        <audio id="favMusic" loop src=""></audio>
+    </div>
+
+    <div class="surprise-overlay" id="surpriseOverlay">
+        <div class="surprise-content">
+            <h2>You unlocked a reward!</h2>
+            <div class="ticket-wrapper">
+                <div class="ticket-inner">
+                    <span class="ticket-icon" id="ticketIcon">🎟️</span>
+                    <div class="ticket-title" id="ticketTitle">Cosmic Coupon</div>
+                    <div class="ticket-text" id="ticketText">Good for 1 Movie Night where you choose all the snacks! 🍿</div>
+                </div>
+            </div>
+            <button class="close-surprise" id="closeSurprise">Claim Coupon ✨</button>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  🎯  CUSTOMIZE THESE — change to make it yours!
+        // ============================================================
+
+        const CONFIG = {
+            // 🔒 The password needed to access the site
+            secretPassword: 'bigmama',
+
+            // 👩  Her name (appears in the greeting)
+            herName: 'Big Mama',
+
+            // ✍️  Your personal message (supports emojis, use \n for line breaks)
+            message: `Hey big mama 😉 whats up\nI had this whole empty space and i didnt know what to do with it so i decide to write a bunch of nonsense\n Anywho I got a bunch of spare time and i was like I owe Raissa a website that does literally nothing🙂\n\nMake sure to press the surprise button, has a couple different options💫`,
+
+            // 🎵 Music Settings (Song 1)
+            songTitle: 'Maria',
+            songArtist: 'Kivumbi King, Mike Kayihura',
+            musicUrl: 'maria.mp3',
+
+            // 💜 Favorite Song Settings (Song 2)
+            favSongTitle: 'that part',
+            favSongArtist: 'Lauren Spencer Smith',
+            favMusicUrl: 'that part.mp3',
+
+            // ⭐  Number of background stars/particles
+            particleCount: 200,
+
+            // 🌧️  Number of background floating hearts
+            rainHeartCount: 18,
+
+            // 🎟️  SURPRISE COUPONS & TRUTHS (Add, edit, or delete as you like!)
+            surprises: [
+                { icon: "🎟️", title: "Cozy Coupon", text: "Good for 1 Movie Night where I buy all the snacks and you choose the movie! 🍿" },
+                { icon: "💫", title: "Universal Truth", text: "U are the absolute prettiest girl." },
+                { icon: "🤗", title: "Warp Hug", text: "Redeemable anytime u want. It'll be a long, bone-crushing hug! ❤️" },
+                { icon: "👑", title: "Princess Treatment", text: "Good for 1 whole day of me doing whatever U say without any complaints! 💆‍♀️" }
+            ]
+        };
+
+        // ============================================================
+        //  🚀  CODE — no need to edit below this line
+        // ============================================================
+
+        // --- DOM refs ---
+        const nameEl = document.getElementById('herName');
+        const messageTextEl = document.getElementById('messageText');
+        const cursorEl = document.querySelector('.cursor');
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const favSongBtn = document.getElementById('favSongBtn');
+        const card = document.getElementById('mainCard');
+        const songCard = document.getElementById('songCard');
+        const particlesContainer = document.getElementById('particles');
+        const heartRainContainer = document.getElementById('heartRain');
+        const lockScreen = document.getElementById('lock-screen');
+        const deliveryScreen = document.getElementById('delivery-screen');
+        const secretCodeInput = document.getElementById('secretCodeInput');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // Teleport Button Interaction Elements
+        const openGiftBtn = document.getElementById('openGiftBtn');
+        const dontClickBtn = document.getElementById('dontClickBtn');
+        let openBtnScale = 1;
+
+        // Audio elements (Song 1)
+        const bgMusic = document.getElementById('bgMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playerDisc = document.getElementById('playerDisc');
+        const trackTitle = document.getElementById('trackTitle');
+        const trackArtist = document.getElementById('trackArtist');
+
+        // Audio elements (Song 2)
+        const favMusic = document.getElementById('favMusic');
+        const favPlayPauseBtn = document.getElementById('favPlayPauseBtn');
+        const giantPlayerDisc = document.getElementById('giantPlayerDisc');
+        const favSongTitle = document.getElementById('favSongTitle');
+        const favSongArtist = document.getElementById('favSongArtist');
+
+        // Surprise pop-up elements
+        const surpriseOverlay = document.getElementById('surpriseOverlay');
+        const closeSurprise = document.getElementById('closeSurprise');
+        const ticketIcon = document.getElementById('ticketIcon');
+        const ticketTitle = document.getElementById('ticketTitle');
+        const ticketText = document.getElementById('ticketText');
+
+        let authenticated = false;
+
+        // --- Set up initial config data ---
+        nameEl.textContent = CONFIG.herName;
+        trackTitle.textContent = CONFIG.songTitle;
+        trackArtist.textContent = CONFIG.songArtist;
+        bgMusic.src = CONFIG.musicUrl;
+
+        favSongTitle.textContent = CONFIG.favSongTitle;
+        favSongArtist.textContent = CONFIG.favSongArtist;
+        favMusic.src = CONFIG.favMusicUrl;
+
+        // --- Step 1: Password Verification ---
+        function checkPassword() {
+            const entered = secretCodeInput.value.trim().toLowerCase();
+            const correct = CONFIG.secretPassword.toLowerCase();
+
+            if (entered === correct) {
+                authenticated = true;
+                errorMsg.style.display = 'none';
+
+                // Transition out of the lock screen
+                lockScreen.style.opacity = '0';
+                lockScreen.style.transform = 'scale(0.9) translateY(-20px)';
+
+                setTimeout(() => {
+                    lockScreen.style.display = 'none';
+                    
+                    // Transition into intermediate page
+                    deliveryScreen.style.display = 'block';
+                    setTimeout(() => {
+                        deliveryScreen.style.opacity = '1';
+                        deliveryScreen.style.transform = 'scale(1)';
+                    }, 50);
+                }, 600);
+
+                // Rain stars
+                spawnRandomHearts(10, '✨');
+            } else {
+                errorMsg.style.display = 'block';
+                secretCodeInput.style.borderColor = '#ff4a7d';
+                setTimeout(() => {
+                    secretCodeInput.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                }, 1500);
+            }
+        }
+
+        // --- "Don't Click Me" Evasive Button Trick ---
+        dontClickBtn.addEventListener('click', () => {
+            // 1. Break out of delivery screen container transforms so position fixed acts on full viewport!
+            if (dontClickBtn.parentElement !== document.body) {
+                document.body.appendChild(dontClickBtn);
+            }
+
+            // 2. Make the "Open My Gift" button grow larger!
+            openBtnScale += 0.25;
+            openGiftBtn.style.transform = `scale(${openBtnScale})`;
+
+            // 3. Teleport to fully independent viewport coordinates
+            dontClickBtn.style.position = 'fixed';
+            dontClickBtn.style.margin = '0';
+            dontClickBtn.style.zIndex = '1000';
+
+            const btnWidth = dontClickBtn.offsetWidth || 150;
+            const btnHeight = dontClickBtn.offsetHeight || 45;
+
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - 20;
+
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+
+            dontClickBtn.style.left = randomX + 'px';
+            dontClickBtn.style.top = randomY + 'px';
+
+            // Spawn visual hearts near its new location
+            spawnHeart(randomX + btnWidth / 2, randomY + btnHeight / 2, '🫣');
+        });
+
+        // --- Step 2: Unwrapping Screen & Main Reveal ---
+        function openMessage() {
+            if (!authenticated) return;
+
+            // Transition out of the delivery screen
+            deliveryScreen.style.opacity = '0';
+            deliveryScreen.style.transform = 'scale(0.9) translateY(-20px)';
+
+            // Clean up the teleporting button so it is removed once the gift card actually opens
+            dontClickBtn.style.display = 'none';
+
+            setTimeout(() => {
+                deliveryScreen.style.display = 'none';
+
+                // Transition in the Main elements
+                card.style.display = 'block';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                    
+                    // 1. Kick off Typewriter effect
+                    typeWriter(CONFIG.message, messageTextEl, 32);
+
+                    // 2. Autoplay Music (Safe now because she interacted with "Open")
+                    bgMusic.play().then(() => {
+                        playPauseBtn.textContent = '⏸';
+                        playerDisc.classList.add('playing');
+                    }).catch(err => console.log("Autoplay caught:", err));
+
+                }, 50);
+            }, 600);
+
+            // Trigger a massive celebratory burst of stars and hearts
+            spawnRandomHearts(25, '✨');
+            spawnRandomHearts(15, '💖');
+        }
+
+        // --- Custom Music Control (Song 1) ---
+        function togglePlay() {
+            if (bgMusic.paused) {
+                // Pause other song if playing
+                if (!favMusic.paused) {
+                    favMusic.pause();
+                    favPlayPauseBtn.textContent = '▶';
+                    giantPlayerDisc.classList.remove('playing');
+                }
+                bgMusic.play();
+                playPauseBtn.textContent = '⏸';
+                playerDisc.classList.add('playing');
+            } else {
+                bgMusic.pause();
+                playPauseBtn.textContent = '▶';
+                playerDisc.classList.remove('playing');
+            }
+        }
+
+        // --- Custom Music Control (Song 2) ---
+        function toggleFavPlay() {
+            if (favMusic.paused) {
+                // Pause other song if playing
+                if (!bgMusic.paused) {
+                    bgMusic.pause();
+                    playPauseBtn.textContent = '▶';
+                    playerDisc.classList.remove('playing');
+                }
+                favMusic.play();
+                favPlayPauseBtn.textContent = '⏸';
+                giantPlayerDisc.classList.add('playing');
+            } else {
+                favMusic.pause();
+                favPlayPauseBtn.textContent = '▶';
+                giantPlayerDisc.classList.remove('playing');
+            }
+        }
+
+        // --- Page Navigation Handlers ---
+        favSongBtn.addEventListener('click', () => {
+            // Pause Song 1
+            if (!bgMusic.paused) {
+                bgMusic.pause();
+                playPauseBtn.textContent = '▶';
+                playerDisc.classList.remove('playing');
+            }
+
+            // Transition out mainCard
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                card.style.display = 'none';
+                
+                // Transition in songCard
+                songCard.style.display = 'block';
+                setTimeout(() => {
+                    songCard.style.opacity = '1';
+                    songCard.style.transform = 'scale(1)';
+                    
+                    // Autoplay favMusic
+                    favMusic.play().then(() => {
+                        favPlayPauseBtn.textContent = '⏸';
+                        giantPlayerDisc.classList.add('playing');
+                    }).catch(err => console.log("Autoplay caught:", err));
+                }, 50);
+            }, 600);
+        });
+
+        function backToMain() {
+            // Pause Song 2
+            if (!favMusic.paused) {
+                favMusic.pause();
+                favPlayPauseBtn.textContent = '▶';
+                giantPlayerDisc.classList.remove('playing');
+            }
+
+            // Transition out songCard
+            songCard.style.opacity = '0';
+            songCard.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                songCard.style.display = 'none';
+                
+                // Transition in mainCard
+                card.style.display = 'block';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 50);
+            }, 600);
+        }
+
+        // Allow pressing "Enter" key on password input
+        secretCodeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // --- Typewriter effect ---
+        function typeWriter(text, el, speed = 28) {
+            let i = 0;
+            const totalChars = text.length;
+
+            el.textContent = '';
+            const cursor = document.querySelector('.cursor');
+
+            function typeChar() {
+                if (i < totalChars) {
+                    const ch = text[i];
+                    if (ch === '\n') {
+                        el.innerHTML += '<br>';
+                    } else {
+                        el.innerHTML += ch;
+                    }
+                    i++;
+                    setTimeout(typeChar, speed);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+
+            setTimeout(typeChar, 400);
+        }
+
+        // --- Spawn a floating heart at a given position ---
+        function spawnHeart(x, y, emoji = '💕') {
+            const el = document.createElement('div');
+            el.className = 'spawn-heart';
+            el.textContent = emoji;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+
+            const tx = (Math.random() - 0.5) * 260;
+            const ty = -Math.random() * 300 - 80;
+            el.style.setProperty('--tx', tx + 'px');
+            el.style.setProperty('--ty', ty + 'px');
+
+            const size = 1.2 + Math.random() * 1.2;
+            el.style.fontSize = (1.6 * size) + 'rem';
+
+            document.body.appendChild(el);
+
+            setTimeout(() => el.remove(), 2000);
+        }
+
+        // --- Spawn hearts at random positions ---
+        function spawnRandomHearts(count, emoji = '💕') {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
+            for (let i = 0; i < count; i++) {
+                const x = Math.random() * vw;
+                const y = Math.random() * vh;
+                setTimeout(() => spawnHeart(x, y, emoji), i * 60);
+            }
+        }
+
+        // --- Spawn hearts on click anywhere ---
+        document.addEventListener('click', (e) => {
+            const target = e.target.closest('button, .close-surprise, .glass-panel');
+            if (target) return;
+            const emojis = ['💕', '❤️', '✨', '🌸', '💖', '💗', '🩷'];
+            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+            spawnHeart(e.clientX, e.clientY, emoji);
+        });
+
+        // --- UPGRADED SURPRISE BUTTON ACTION ---
+        surpriseBtn.addEventListener('click', () => {
+            // Trigger background "Warp Speed"
+            document.body.classList.add('warp');
+            
+            // Randomly select a surprise coupon/truth
+            const selection = CONFIG.surprises[Math.floor(Math.random() * CONFIG.surprises.length)];
+            ticketIcon.textContent = selection.icon;
+            ticketTitle.textContent = selection.title;
+            ticketText.textContent = selection.text;
+
+            // Generate explosive golden and rainbow effects
+            const confettiEmojis = ['🎉', '✨', '🌟', '💫', '🎁', '🎟️', '🌸', '💖', '🍿', '👑', '🤗'];
+            for (let i = 0; i < 45; i++) {
+                const emoji = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                setTimeout(() => spawnHeart(x, y, emoji), i * 35);
+            }
+
+            // Show the Pop-up Ticket Overlay after the warp flash
+            setTimeout(() => {
+                surpriseOverlay.classList.add('show');
+                document.body.classList.remove('warp');
+            }, 600);
+        });
+
+        closeSurprise.addEventListener('click', () => {
+            surpriseOverlay.classList.remove('show');
+        });
+
+        surpriseOverlay.addEventListener('click', (e) => {
+            if (e.target === surpriseOverlay) {
+                surpriseOverlay.classList.remove('show');
+            }
+        });
+
+        // --- Build background particles (stars) ---
+        function createParticles() {
+            const count = CONFIG.particleCount;
+            for (let i = 0; i < count; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                const size = 1.5 + Math.random() * 3.5;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.animationDuration = (12 + Math.random() * 28) + 's';
+                p.style.animationDelay = (Math.random() * 20) + 's';
+                p.style.opacity = 0.2 + Math.random() * 0.5;
+                particlesContainer.appendChild(p);
+            }
+        }
+        createParticles();
+
+        // --- Build heart rain (background floating hearts) ---
+        function createHeartRain() {
+            const count = CONFIG.rainHeartCount;
+            const emojis = ['♥', '♡', '❤', '💕', '💗'];
+            for (let i = 0; i < count; i++) {
+                const span = document.createElement('span');
+                span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                span.style.left = Math.random() * 100 + '%';
+                span.style.fontSize = (0.8 + Math.random() * 1.6) + 'rem';
+                span.style.animationDuration = (15 + Math.random() * 25) + 's';
+                span.style.animationDelay = (Math.random() * 30) + 's';
+                span.style.opacity = 0.08 + Math.random() * 0.15;
+                heartRainContainer.appendChild(span);
+            }
+        }
+        createHeartRain();
+
+        // Esc key to exit modal overlay
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                surpriseOverlay.classList.remove('show');
+            }
+        });
+
+        // --- Small easter egg: double-tap the title ---
+        let titleTap = 0;
+        document.querySelector('.greeting').addEventListener('click', () => {
+            if (!authenticated) return;
+            titleTap++;
+            if (titleTap === 2) {
+                spawnRandomHearts(30, '🌟');
+                titleTap = 0;
+            }
+            setTimeout(() => { titleTap = 0; }, 800);
+        });
+
+        console.log('💕 Website loaded!');
+    </script>
+
+</body>
+</html>
