@@ -287,42 +287,47 @@
             background-clip: text;
         }
 
-        /* ----- TYPEWRITER MESSAGE ----- */
-        .message-box {
-            background: rgba(255, 255, 255, 0.04);
+        /* ----- SPOTIFY-STYLE LYRICS CONTAINER ----- */
+        .lyrics-box {
+            background: rgba(0, 0, 0, 0.25);
             border-radius: 28px;
-            padding: 1.8rem 2rem;
+            padding: 1.5rem 1.2rem;
             margin: 1.5rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            min-height: 80px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            height: 220px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            text-align: center;
+            position: relative;
+        }
+
+        .lyrics-box::-webkit-scrollbar {
+            display: none;
+        }
+
+        .lyrics-list {
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            gap: 16px;
+            padding: 80px 0;
         }
 
-        #typewriter {
-            color: rgba(255, 255, 255, 0.88);
-            font-size: 1.1rem;
-            font-weight: 400;
-            line-height: 1.8;
-            min-height: 60px;
-            white-space: pre-wrap;
-            word-break: break-word;
+        .lyric-line {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 1.05rem;
+            font-weight: 700;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+            filter: blur(0.5px);
+            user-select: none;
         }
 
-        #typewriter .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1.2em;
-            background: #ff9bcb;
-            margin-left: 4px;
-            vertical-align: text-bottom;
-            animation: blink 0.9s step-end infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
+        .lyric-line.active {
+            color: #ffffff;
+            font-size: 1.3rem;
+            filter: blur(0);
+            text-shadow: 0 0 15px rgba(255, 107, 157, 0.8), 0 0 30px rgba(255, 107, 157, 0.4);
+            transform: scale(1.04);
         }
 
         /* ----- MUSIC PLAYER ----- */
@@ -361,7 +366,6 @@
             border: 2px solid rgba(255, 155, 203, 0.5);
         }
 
-        /* Vinyl Spin Animation */
         .player-disc.playing {
             animation: spinDisc 4s linear infinite;
         }
@@ -521,10 +525,10 @@
             border-radius: 60px;
             padding: 2.4rem 3rem;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 215, 0, 0.4);
             transform: scale(0.8);
             transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 40px 100px rgba(255, 215, 0, 0.15);
             max-width: 450px;
             width: 90%;
         }
@@ -559,12 +563,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
-        /* ----- SPECIAL SURPRISE TICKET DESIGN ----- */
-        .surprise-overlay .surprise-content {
-            border: 2px dashed rgba(255, 215, 0, 0.4);
-            box-shadow: 0 40px 100px rgba(255, 215, 0, 0.15);
-        }
-
         .ticket-wrapper {
             background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 100, 150, 0.05) 100%);
             border: 1px solid rgba(255, 215, 0, 0.2);
@@ -575,7 +573,6 @@
             overflow: hidden;
         }
 
-        /* Rotating Cosmic background for surprise ticket */
         .ticket-wrapper::before {
             content: '';
             position: absolute;
@@ -621,9 +618,9 @@
         /* ----- RESPONSIVE ----- */
         @media (max-width: 500px) {
             body {
-                overflow-y: auto; /* Let the body scroll naturally on mobile */
-                align-items: flex-start; /* Start card at the top instead of forcing vertical centering */
-                padding: 20px 0; /* Add a little breathing room at the top and bottom */
+                overflow-y: auto;
+                align-items: flex-start;
+                padding: 20px 0;
             }
             #lock-screen, #delivery-screen {
                 padding: 2.5rem 1.5rem;
@@ -633,20 +630,24 @@
                 font-size: 2rem;
             }
             .card {
-                padding: 1.8rem 1.2rem 1.5rem; /* Slightly tighter padding to save space */
+                padding: 1.8rem 1.2rem 1.5rem;
                 border-radius: 32px;
-                max-height: none; /* Let the card grow naturally with its contents */
-                overflow-y: visible; /* Hand off scroll duty to the body */
+                max-height: none;
+                overflow-y: visible;
             }
             .header .greeting {
                 font-size: 2.2rem;
             }
-            .message-box {
-                padding: 1.2rem 1.1rem;
+            .lyrics-box {
+                padding: 1rem 0.8rem;
                 margin: 1rem 0;
+                height: 190px;
             }
-            #typewriter {
+            .lyric-line {
                 font-size: 0.95rem;
+            }
+            .lyric-line.active {
+                font-size: 1.15rem;
             }
             .interactive-row button {
                 font-size: 0.9rem;
@@ -669,18 +670,6 @@
                 height: 38px;
             }
         }
-        @media (max-width: 380px) {
-            .header .greeting {
-                font-size: 1.8rem;
-            }
-            #typewriter {
-                font-size: 0.85rem;
-            }
-            .interactive-row button {
-                font-size: 0.8rem;
-                padding: 8px 20px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -691,17 +680,18 @@
 
     <div class="heart-rain" id="heartRain"></div>
 
+    <!-- LOCK SCREEN -->
     <div id="lock-screen" class="glass-panel">
         <div class="lock-heart">💖</div>
         <h1>Enter the secret code</h1>
         <div class="lock-input-group">
             <input type="password" id="secretCodeInput" class="lock-input" placeholder="Give me the password...">
-            <div class="error-message" id="errorMsg">That's not it! Try again. 💕</div>
+            <div class="error-message" id="errorMsg">That's not it, my love! Try again. 💕</div>
         </div>
         <button class="cosmic-btn" onclick="checkPassword()">Unlock</button>
     </div>
 
-    <!-- INTERMEDIATE DELIVERY SCREEN WITH SILLY BUTTON TRICK -->
+    <!-- INTERMEDIATE DELIVERY SCREEN WITH EVASIVE BUTTON TRICK -->
     <div id="delivery-screen" class="glass-panel">
         <div class="cosmic-envelope">💌</div>
         <h1>A Special Delivery</h1>
@@ -721,10 +711,9 @@
             </div>
         </div>
 
-        <div class="message-box">
-            <div id="typewriter">
-                <span id="messageText"></span><span class="cursor"></span>
-            </div>
+        <!-- SPOTIFY-STYLE SYNCED LYRICS BOX -->
+        <div class="lyrics-box" id="lyricsContainer">
+            <div class="lyrics-list" id="lyricsList"></div>
         </div>
 
         <div class="music-player">
@@ -749,7 +738,7 @@
         </div>
     </div>
 
-    <!-- NEW FAVORITE SONG CARD PAGE -->
+    <!-- SECOND SONG CARD PAGE -->
     <div class="card glass-panel" id="songCard">
         <div style="text-align: left; margin-bottom: 1.5rem;">
             <button class="cosmic-btn" onclick="backToMain()" style="padding: 8px 20px; font-size: 0.9rem;">
@@ -772,6 +761,7 @@
         <audio id="favMusic" loop src=""></audio>
     </div>
 
+    <!-- SURPRISE OVERLAY -->
     <div class="surprise-overlay" id="surpriseOverlay">
         <div class="surprise-content">
             <h2>You unlocked a reward!</h2>
@@ -788,36 +778,77 @@
 
     <script>
         // ============================================================
-        //  🎯  CUSTOMIZE THESE — change to make it yours!
+        //  🎯  CUSTOMIZE CONFIG HERE
         // ============================================================
 
         const CONFIG = {
-            // 🔒 The password needed to access the site
             secretPassword: 'bigmama',
-
-            // 👩  Her name (appears in the greeting)
             herName: 'Big Mama',
 
-            // ✍️  Your personal message (supports emojis, use \n for line breaks)
-            message: `Hey big mama 😉 whats up\nI had this whole empty space and i didnt know what to do with it so i decide to write a bunch of nonsense\n Anywho I got a bunch of spare time and i was like I owe Raissa a website that does literally nothing🙂\n\nMake sure to press the surprise button as much as u can, has a couple different options💫`,
-
-            // 🎵 Music Settings (Song 1)
+            // 🎵 Song 1 Settings (Night Changes by One Direction)
             songTitle: 'Night Changes',
             songArtist: 'One Direction',
-            musicUrl: 'One Direction - Night Changes.mp3',
+            musicUrl: 'One Direction - Night Changes.mp3', // Make sure your audio file matches this name
+
+            // 🎤 Timed Lyrics (Adjust numbers slightly if your specific mp3 file alignment needs tweaking)
+            syncedLyrics: [
+                { time: 0.0, text: "🎵 (Intro)" },
+                { time: 8.23, text: "Going out tonight, changes into something red" },
+  { time: 12.65, text: "Her mother doesn't like that kind of dress" },
+  { time: 16.26, text: "Everything she never had, she's showing off" },
+  { time: 24.01, text: "Driving too fast, moon is breaking through her hair" },
+  { time: 28.65, text: "She's headin' for something that she won't forget" },
+  { time: 32.15, text: "Having no regrets is all that she really wants" },
+  { time: 40.24, text: "We're only getting older, baby" },
+  { time: 44.48, text: "And I've been thinking about it lately" },
+  { time: 48.84, text: "Does it ever drive you crazy" },
+  { time: 52.19, text: "Just how fast the night changes?" },
+  { time: 56.72, text: "Everything that you've ever dreamed of" },
+  { time: 60.64, text: "Disappearing when you wake up" },
+  { time: 64.68, text: "But there's nothing to be afraid of" },
+  { time: 68.05, text: "Even when the night changes" },
+  { time: 72.73, text: "It will never change me and you" },
+  { time: 80.13, text: "Chasing her tonight, doubts are running 'round her head" },
+  { time: 84.78, text: "He's waiting, hides behind a cigarette" },
+  { time: 88.25, text: "Heart is beating loud and she doesn't want it to stop" },
+  { time: 96.05, text: "Moving too fast, Moon is lighting up her skin" },
+  { time: 100.87, text: "She's falling, doesn't even know it yet" },
+  { time: 104.22, text: "Having no regrets is all that she really wants" },
+  { time: 112.51, text: "We're only getting older, baby" },
+  { time: 116.61, text: "And I've been thinking about it lately" },
+  { time: 120.74, text: "Does it ever drive you crazy" },
+  { time: 124.16, text: "Just how fast the night changes?" },
+  { time: 128.63, text: "Everything that you've ever dreamed of" },
+  { time: 132.72, text: "Disappearing when you wake up" },
+  { time: 136.73, text: "But there's nothing to be afraid of" },
+  { time: 140.31, text: "Even when the night changes" },
+  { time: 144.88, text: "It will never change me and you" },
+  { time: 160.22, text: "Going out tonight, changes into something red" },
+  { time: 164.63, text: "Her mother doesn't like that kind of dress" },
+  { time: 168.03, text: "Reminds her of the missing piece of innocence she lost" },
+  { time: 174.28, text: "We're only getting older, baby" },
+  { time: 178.45, text: "And I've been thinking about it lately" },
+  { time: 182.69, text: "Does it ever drive you crazy" },
+  { time: 186.24, text: "Just how fast the night changes?" },
+  { time: 190.89, text: "Everything that you've ever dreamed of" },
+  { time: 194.67, text: "Disappearing when you wake up" },
+  { time: 198.78, text: "But there's nothing to be afraid of" },
+  { time: 202.08, text: "Even when the night changes" },
+  { time: 206.60, text: "It will never change, baby" },
+  { time: 210.63, text: "It will never change, baby" },
+  { time: 214.67, text: "It will never change me and you" }
+            ],
 
             // 💜 Favorite Song Settings (Song 2)
             favSongTitle: 'that part',
             favSongArtist: 'Lauren Spencer Smith',
             favMusicUrl: 'that part.mp3',
 
-            // ⭐  Number of background stars/particles
+            // Visual elements
             particleCount: 200,
-
-            // 🌧️  Number of background floating hearts
             rainHeartCount: 18,
 
-            // 🎟️  SURPRISE COUPONS & TRUTHS (Add, edit, or delete as you like!)
+            // Coupons & Rewards
             surprises: [
                 { icon: "🎟️", title: "Cozy Coupon", text: "Good for 1 Movie Night where I buy all the snacks and you choose the movie! 🍿" },
                 { icon: "💫", title: "Universal Truth", text: "U are the absolute prettiest girl." },
@@ -827,13 +858,10 @@
         };
 
         // ============================================================
-        //  🚀  CODE — no need to edit below this line
+        //  🚀 IMPLEMENTATION LOGIC
         // ============================================================
 
-        // --- DOM refs ---
         const nameEl = document.getElementById('herName');
-        const messageTextEl = document.getElementById('messageText');
-        const cursorEl = document.querySelector('.cursor');
         const surpriseBtn = document.getElementById('surpriseBtn');
         const favSongBtn = document.getElementById('favSongBtn');
         const card = document.getElementById('mainCard');
@@ -845,7 +873,7 @@
         const secretCodeInput = document.getElementById('secretCodeInput');
         const errorMsg = document.getElementById('errorMsg');
 
-        // Teleport Button Interaction Elements
+        // Teleport Button Elements
         const openGiftBtn = document.getElementById('openGiftBtn');
         const dontClickBtn = document.getElementById('dontClickBtn');
         let openBtnScale = 1;
@@ -857,6 +885,11 @@
         const trackTitle = document.getElementById('trackTitle');
         const trackArtist = document.getElementById('trackArtist');
 
+        // Synced Lyrics Elements
+        const lyricsList = document.getElementById('lyricsList');
+        const lyricsContainer = document.getElementById('lyricsContainer');
+        let currentActiveIndex = -1;
+
         // Audio elements (Song 2)
         const favMusic = document.getElementById('favMusic');
         const favPlayPauseBtn = document.getElementById('favPlayPauseBtn');
@@ -864,7 +897,7 @@
         const favSongTitle = document.getElementById('favSongTitle');
         const favSongArtist = document.getElementById('favSongArtist');
 
-        // Surprise pop-up elements
+        // Surprise Overlay
         const surpriseOverlay = document.getElementById('surpriseOverlay');
         const closeSurprise = document.getElementById('closeSurprise');
         const ticketIcon = document.getElementById('ticketIcon');
@@ -873,7 +906,7 @@
 
         let authenticated = false;
 
-        // --- Set up initial config data ---
+        // --- Initialize Page Config ---
         nameEl.textContent = CONFIG.herName;
         trackTitle.textContent = CONFIG.songTitle;
         trackArtist.textContent = CONFIG.songArtist;
@@ -883,7 +916,57 @@
         favSongArtist.textContent = CONFIG.favSongArtist;
         favMusic.src = CONFIG.favMusicUrl;
 
-        // --- Step 1: Password Verification ---
+        // --- Render Synced Lyrics DOM ---
+        function renderSyncedLyrics() {
+            lyricsList.innerHTML = '';
+            CONFIG.syncedLyrics.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.className = 'lyric-line';
+                div.textContent = line.text;
+                div.id = `lyric-${index}`;
+
+                // Click line to skip audio to that time
+                div.onclick = () => {
+                    bgMusic.currentTime = line.time;
+                };
+
+                lyricsList.appendChild(div);
+            });
+        }
+        renderSyncedLyrics();
+
+        // --- Audio Time Update Listener (Spotify-style Sync & Auto-scroll) ---
+        bgMusic.addEventListener('timeupdate', () => {
+            const currentTime = bgMusic.currentTime;
+
+            let activeIndex = CONFIG.syncedLyrics.findIndex((line, i) => {
+                const nextLineTime = CONFIG.syncedLyrics[i + 1] ? CONFIG.syncedLyrics[i + 1].time : Infinity;
+                return currentTime >= line.time && currentTime < nextLineTime;
+            });
+
+            if (activeIndex !== -1 && activeIndex !== currentActiveIndex) {
+                if (currentActiveIndex !== -1) {
+                    const prevEl = document.getElementById(`lyric-${currentActiveIndex}`);
+                    if (prevEl) prevEl.classList.remove('active');
+                }
+
+                const activeEl = document.getElementById(`lyric-${activeIndex}`);
+                if (activeEl) {
+                    activeEl.classList.add('active');
+
+                    // Smoothly center the active line
+                    const containerHeight = lyricsContainer.clientHeight;
+                    const lineOffset = activeEl.offsetTop;
+                    const lineHeight = activeEl.clientHeight;
+
+                    lyricsContainer.scrollTop = lineOffset - (containerHeight / 2) + (lineHeight / 2);
+                }
+
+                currentActiveIndex = activeIndex;
+            }
+        });
+
+        // --- Password Check ---
         function checkPassword() {
             const entered = secretCodeInput.value.trim().toLowerCase();
             const correct = CONFIG.secretPassword.toLowerCase();
@@ -892,14 +975,11 @@
                 authenticated = true;
                 errorMsg.style.display = 'none';
 
-                // Transition out of the lock screen
                 lockScreen.style.opacity = '0';
                 lockScreen.style.transform = 'scale(0.9) translateY(-20px)';
 
                 setTimeout(() => {
                     lockScreen.style.display = 'none';
-                    
-                    // Transition into intermediate page
                     deliveryScreen.style.display = 'block';
                     setTimeout(() => {
                         deliveryScreen.style.opacity = '1';
@@ -907,7 +987,6 @@
                     }, 50);
                 }, 600);
 
-                // Rain stars
                 spawnRandomHearts(10, '✨');
             } else {
                 errorMsg.style.display = 'block';
@@ -918,18 +997,15 @@
             }
         }
 
-        // --- "Don't Click Me" Evasive Button Trick ---
+        // --- Evasive Button Action ---
         dontClickBtn.addEventListener('click', () => {
-            // 1. Break out of delivery screen container transforms so position fixed acts on full viewport!
             if (dontClickBtn.parentElement !== document.body) {
                 document.body.appendChild(dontClickBtn);
             }
 
-            // 2. Make the "Open My Gift" button grow larger!
             openBtnScale += 0.25;
             openGiftBtn.style.transform = `scale(${openBtnScale})`;
 
-            // 3. Teleport to fully independent viewport coordinates
             dontClickBtn.style.position = 'fixed';
             dontClickBtn.style.margin = '0';
             dontClickBtn.style.zIndex = '1000';
@@ -946,35 +1022,25 @@
             dontClickBtn.style.left = randomX + 'px';
             dontClickBtn.style.top = randomY + 'px';
 
-            // Spawn visual hearts near its new location
             spawnHeart(randomX + btnWidth / 2, randomY + btnHeight / 2, '🫣');
         });
 
-        // --- Step 2: Unwrapping Screen & Main Reveal ---
+        // --- Unwrapping & Main Card Reveal ---
         function openMessage() {
             if (!authenticated) return;
 
-            // Transition out of the delivery screen
             deliveryScreen.style.opacity = '0';
             deliveryScreen.style.transform = 'scale(0.9) translateY(-20px)';
-
-            // Clean up the teleporting button so it is removed once the gift card actually opens
             dontClickBtn.style.display = 'none';
 
             setTimeout(() => {
                 deliveryScreen.style.display = 'none';
-
-                // Transition in the Main elements
                 card.style.display = 'block';
                 
                 setTimeout(() => {
                     card.style.opacity = '1';
                     card.style.transform = 'scale(1)';
                     
-                    // 1. Kick off Typewriter effect
-                    typeWriter(CONFIG.message, messageTextEl, 32);
-
-                    // 2. Autoplay Music (Safe now because she interacted with "Open")
                     bgMusic.play().then(() => {
                         playPauseBtn.textContent = '⏸';
                         playerDisc.classList.add('playing');
@@ -983,15 +1049,13 @@
                 }, 50);
             }, 600);
 
-            // Trigger a massive celebratory burst of stars and hearts
             spawnRandomHearts(25, '✨');
             spawnRandomHearts(15, '💖');
         }
 
-        // --- Custom Music Control (Song 1) ---
+        // --- Audio Controls ---
         function togglePlay() {
             if (bgMusic.paused) {
-                // Pause other song if playing
                 if (!favMusic.paused) {
                     favMusic.pause();
                     favPlayPauseBtn.textContent = '▶';
@@ -1007,10 +1071,8 @@
             }
         }
 
-        // --- Custom Music Control (Song 2) ---
         function toggleFavPlay() {
             if (favMusic.paused) {
-                // Pause other song if playing
                 if (!bgMusic.paused) {
                     bgMusic.pause();
                     playPauseBtn.textContent = '▶';
@@ -1028,26 +1090,20 @@
 
         // --- Page Navigation Handlers ---
         favSongBtn.addEventListener('click', () => {
-            // Pause Song 1
             if (!bgMusic.paused) {
                 bgMusic.pause();
                 playPauseBtn.textContent = '▶';
                 playerDisc.classList.remove('playing');
             }
 
-            // Transition out mainCard
             card.style.opacity = '0';
             card.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 card.style.display = 'none';
-                
-                // Transition in songCard
                 songCard.style.display = 'block';
                 setTimeout(() => {
                     songCard.style.opacity = '1';
                     songCard.style.transform = 'scale(1)';
-                    
-                    // Autoplay favMusic
                     favMusic.play().then(() => {
                         favPlayPauseBtn.textContent = '⏸';
                         giantPlayerDisc.classList.add('playing');
@@ -1057,20 +1113,16 @@
         });
 
         function backToMain() {
-            // Pause Song 2
             if (!favMusic.paused) {
                 favMusic.pause();
                 favPlayPauseBtn.textContent = '▶';
                 giantPlayerDisc.classList.remove('playing');
             }
 
-            // Transition out songCard
             songCard.style.opacity = '0';
             songCard.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 songCard.style.display = 'none';
-                
-                // Transition in mainCard
                 card.style.display = 'block';
                 setTimeout(() => {
                     card.style.opacity = '1';
@@ -1079,40 +1131,11 @@
             }, 600);
         }
 
-        // Allow pressing "Enter" key on password input
         secretCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                checkPassword();
-            }
+            if (e.key === 'Enter') checkPassword();
         });
 
-        // --- Typewriter effect ---
-        function typeWriter(text, el, speed = 28) {
-            let i = 0;
-            const totalChars = text.length;
-
-            el.textContent = '';
-            const cursor = document.querySelector('.cursor');
-
-            function typeChar() {
-                if (i < totalChars) {
-                    const ch = text[i];
-                    if (ch === '\n') {
-                        el.innerHTML += '<br>';
-                    } else {
-                        el.innerHTML += ch;
-                    }
-                    i++;
-                    setTimeout(typeChar, speed);
-                } else {
-                    cursor.style.display = 'none';
-                }
-            }
-
-            setTimeout(typeChar, 400);
-        }
-
-        // --- Spawn a floating heart at a given position ---
+        // --- Visual Effects (Particles & Floating Hearts) ---
         function spawnHeart(x, y, emoji = '💕') {
             const el = document.createElement('div');
             el.className = 'spawn-heart';
@@ -1129,11 +1152,9 @@
             el.style.fontSize = (1.6 * size) + 'rem';
 
             document.body.appendChild(el);
-
             setTimeout(() => el.remove(), 2000);
         }
 
-        // --- Spawn hearts at random positions ---
         function spawnRandomHearts(count, emoji = '💕') {
             const vw = window.innerWidth;
             const vh = window.innerHeight;
@@ -1144,27 +1165,23 @@
             }
         }
 
-        // --- Spawn hearts on click anywhere ---
         document.addEventListener('click', (e) => {
-            const target = e.target.closest('button, .close-surprise, .glass-panel');
+            const target = e.target.closest('button, .close-surprise, .glass-panel, .lyric-line');
             if (target) return;
             const emojis = ['💕', '❤️', '✨', '🌸', '💖', '💗', '🩷'];
             const emoji = emojis[Math.floor(Math.random() * emojis.length)];
             spawnHeart(e.clientX, e.clientY, emoji);
         });
 
-        // --- UPGRADED SURPRISE BUTTON ACTION ---
+        // --- Surprise Button Overlay ---
         surpriseBtn.addEventListener('click', () => {
-            // Trigger background "Warp Speed"
             document.body.classList.add('warp');
             
-            // Randomly select a surprise coupon/truth
             const selection = CONFIG.surprises[Math.floor(Math.random() * CONFIG.surprises.length)];
             ticketIcon.textContent = selection.icon;
             ticketTitle.textContent = selection.title;
             ticketText.textContent = selection.text;
 
-            // Generate explosive golden and rainbow effects
             const confettiEmojis = ['🎉', '✨', '🌟', '💫', '🎁', '🎟️', '🌸', '💖', '🍿', '👑', '🤗'];
             for (let i = 0; i < 45; i++) {
                 const emoji = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
@@ -1173,24 +1190,18 @@
                 setTimeout(() => spawnHeart(x, y, emoji), i * 35);
             }
 
-            // Show the Pop-up Ticket Overlay after the warp flash
             setTimeout(() => {
                 surpriseOverlay.classList.add('show');
                 document.body.classList.remove('warp');
             }, 600);
         });
 
-        closeSurprise.addEventListener('click', () => {
-            surpriseOverlay.classList.remove('show');
-        });
-
+        closeSurprise.addEventListener('click', () => surpriseOverlay.classList.remove('show'));
         surpriseOverlay.addEventListener('click', (e) => {
-            if (e.target === surpriseOverlay) {
-                surpriseOverlay.classList.remove('show');
-            }
+            if (e.target === surpriseOverlay) surpriseOverlay.classList.remove('show');
         });
 
-        // --- Build background particles (stars) ---
+        // --- Background Stars & Rain ---
         function createParticles() {
             const count = CONFIG.particleCount;
             for (let i = 0; i < count; i++) {
@@ -1208,7 +1219,6 @@
         }
         createParticles();
 
-        // --- Build heart rain (background floating hearts) ---
         function createHeartRain() {
             const count = CONFIG.rainHeartCount;
             const emojis = ['♥', '♡', '❤', '💕', '💗'];
@@ -1225,26 +1235,9 @@
         }
         createHeartRain();
 
-        // Esc key to exit modal overlay
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                surpriseOverlay.classList.remove('show');
-            }
+            if (e.key === 'Escape') surpriseOverlay.classList.remove('show');
         });
-
-        // --- Small easter egg: double-tap the title ---
-        let titleTap = 0;
-        document.querySelector('.greeting').addEventListener('click', () => {
-            if (!authenticated) return;
-            titleTap++;
-            if (titleTap === 2) {
-                spawnRandomHearts(30, '🌟');
-                titleTap = 0;
-            }
-            setTimeout(() => { titleTap = 0; }, 800);
-        });
-
-        console.log('💕 Website loaded!');
     </script>
 
 </body>
