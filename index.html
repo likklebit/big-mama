@@ -1,1244 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>For You 💕</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-    <style>
-        /* ----- RESET & BASE ----- */
-        *,
-        *::before,
-        *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Nunito', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #0b081a;
-            overflow: hidden;
-        }
-
-        /* ----- ANIMATED BACKGROUND ----- */
-        .bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background: linear-gradient(135deg, #0b081a 0%, #1a0f2e 25%, #2d1b3d 50%, #1a0f2e 75%, #0b081a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 18s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* ----- FLOATING PARTICLES (stars) ----- */
-        #particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            animation: floatParticle linear infinite;
-            box-shadow: 0 0 12px rgba(255, 200, 255, 0.3);
-            transition: transform 0.5s ease;
-        }
-
-        @keyframes floatParticle {
-            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Particle Warp Speed effect (triggered on Surprise) */
-        .warp .particle {
-            animation-duration: 0.8s !important;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        /* ----- HEART RAIN (background floating hearts) ----- */
-        .heart-rain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .heart-rain span {
-            position: absolute;
-            display: block;
-            font-size: 1.6rem;
-            animation: heartFall linear infinite;
-            opacity: 0.25;
-            user-select: none;
-        }
-
-        @keyframes heartFall {
-            0% { transform: translateY(-10vh) rotate(0deg) scale(0.6); opacity: 0; }
-            10% { opacity: 0.25; }
-            90% { opacity: 0.25; }
-            100% { transform: translateY(110vh) rotate(720deg) scale(1.2); opacity: 0; }
-        }
-
-        /* ----- COMMON CONTAINER GLASS STYLE ----- */
-        .glass-panel {
-            position: relative;
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-            text-align: center;
-            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* ----- 1. LOCK SCREEN ----- */
-        #lock-screen {
-            max-width: 420px;
-            width: 92%;
-            padding: 3.5rem 2.5rem;
-            border-radius: 40px;
-        }
-
-        .lock-heart {
-            font-size: 3rem;
-            color: #ff6b9d;
-            margin-bottom: 1.5rem;
-            animation: pulse 1.5s infinite;
-            display: inline-block;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
-            100% { transform: scale(1); }
-        }
-
-        .glass-panel h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
-        }
-
-        .lock-input-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .lock-input {
-            width: 100%;
-            padding: 14px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            color: #fff;
-            font-size: 1.1rem;
-            text-align: center;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .lock-input:focus {
-            border-color: #ff6b9d;
-            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .cosmic-btn {
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 12px 35px;
-            border: none;
-            border-radius: 60px;
-            background: rgba(255, 107, 157, 0.2);
-            color: #fff;
-            border: 1px solid rgba(255, 107, 157, 0.3);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .cosmic-btn:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 107, 157, 0.35);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.3);
-        }
-
-        .error-message {
-            color: #ff4a7d;
-            font-size: 0.85rem;
-            margin-top: 10px;
-            display: none;
-            font-weight: 600;
-        }
-
-        /* ----- 2. INTERMEDIATE PAGE (SPECIAL DELIVERY) ----- */
-        #delivery-screen {
-            display: none;
-            opacity: 0;
-            transform: scale(0.95);
-            max-width: 460px;
-            width: 92%;
-            padding: 4rem 2.5rem;
-            border-radius: 40px;
-        }
-
-        .cosmic-envelope {
-            font-size: 4.5rem;
-            margin-bottom: 2rem;
-            display: inline-block;
-            animation: floatEnvelope 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 155, 203, 0.4));
-        }
-
-        @keyframes floatEnvelope {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(3deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
-
-        #delivery-screen p {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 2.5rem;
-        }
-
-        /* ----- 3. MAIN CARD ----- */
-        .card {
-            display: none;
-            opacity: 0;
-            transform: scale(0.95);
-            max-width: 620px;
-            width: 92%;
-            padding: 3rem 2.5rem 2.5rem;
-            border-radius: 48px;
-            max-height: 95vh;
-            overflow-y: auto;
-        }
-
-        .card::-webkit-scrollbar {
-            width: 4px;
-        }
-        .card::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .card::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-        }
-
-        /* ----- HEADER ----- */
-        .header {
-            margin-bottom: 1.2rem;
-        }
-
-        .header .greeting {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
-            line-height: 1.2;
-        }
-
-        .header .greeting .name {
-            color: #ff9bcb;
-            background: linear-gradient(135deg, #ff9bcb, #ff6b9d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* ----- SPOTIFY-STYLE LYRICS CONTAINER ----- */
-        .lyrics-box {
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 28px;
-            padding: 1.5rem 1.2rem;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            height: 220px;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-            text-align: center;
-            position: relative;
-        }
-
-        .lyrics-box::-webkit-scrollbar {
-            display: none;
-        }
-
-        .lyrics-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 80px 0;
-        }
-
-        .lyric-line {
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 1.05rem;
-            font-weight: 700;
-            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            cursor: pointer;
-            filter: blur(0.5px);
-            user-select: none;
-        }
-
-        .lyric-line.active {
-            color: #ffffff;
-            font-size: 1.3rem;
-            filter: blur(0);
-            text-shadow: 0 0 15px rgba(255, 107, 157, 0.8), 0 0 30px rgba(255, 107, 157, 0.4);
-            transform: scale(1.04);
-        }
-
-        /* ----- MUSIC PLAYER ----- */
-        .music-player {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 24px;
-            padding: 12px 18px;
-            margin: 1.2rem 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-align: left;
-        }
-
-        .player-disc {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 50%, #1c1c1c 100%);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            position: relative;
-        }
-
-        .player-disc::after {
-            content: '';
-            width: 14px;
-            height: 14px;
-            background: #0b081a;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 155, 203, 0.5);
-        }
-
-        .player-disc.playing {
-            animation: spinDisc 4s linear infinite;
-        }
-
-        @keyframes spinDisc {
-            100% { transform: rotate(360deg); }
-        }
-
-        .player-info {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .track-title {
-            color: #fff;
-            font-size: 0.95rem;
-            font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .track-artist {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-top: 1px;
-        }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-shrink: 0;
-        }
-
-        .play-pause-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .play-pause-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.08);
-        }
-
-        /* ----- INTERACTIVE ROW ----- */
-        .interactive-row {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 1.5rem;
-        }
-
-        .interactive-row button {
-            font-family: 'Nunito', sans-serif;
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 60px;
-            background: rgba(255, 107, 157, 0.2);
-            color: #fff;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 107, 157, 0.3);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .interactive-row button:hover {
-            transform: translateY(-3px) scale(1.03);
-            background: rgba(255, 107, 157, 0.35);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.35);
-        }
-
-        .interactive-row button:active {
-            transform: scale(0.95);
-        }
-
-        .interactive-row button .emoji {
-            font-size: 1.2rem;
-        }
-
-        /* ----- GIANT VINYL DISC STYLING ----- */
-        .player-disc.giant-disc {
-            width: 240px;
-            height: 240px;
-            border-width: 6px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-        }
-
-        .player-disc.giant-disc::after {
-            width: 50px;
-            height: 50px;
-            border-width: 4px;
-        }
-
-        /* ----- FLOATING HEARTS (click spawn) ----- */
-        .spawn-heart {
-            position: fixed;
-            pointer-events: none;
-            z-index: 50;
-            font-size: 2rem;
-            animation: heartSpawn 1.8s ease-out forwards;
-            user-select: none;
-        }
-
-        @keyframes heartSpawn {
-            0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--tx), var(--ty)) scale(1.6) rotate(40deg); opacity: 0; }
-        }
-
-        /* ----- SURPRISE OVERLAY ----- */
-        .surprise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .surprise-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .surprise-overlay .surprise-content {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 2.4rem 3rem;
-            text-align: center;
-            border: 2px dashed rgba(255, 215, 0, 0.4);
-            transform: scale(0.8);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 40px 100px rgba(255, 215, 0, 0.15);
-            max-width: 450px;
-            width: 90%;
-        }
-
-        .surprise-overlay.show .surprise-content {
-            transform: scale(1);
-        }
-
-        .surprise-overlay .surprise-content h2 {
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-family: 'Dancing Script', cursive;
-        }
-
-        .surprise-overlay .surprise-content .close-surprise {
-            margin-top: 1.5rem;
-            padding: 8px 28px;
-            border: none;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .surprise-overlay .surprise-content .close-surprise:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .ticket-wrapper {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 100, 150, 0.05) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 24px;
-            padding: 20px;
-            margin-top: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ticket-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            animation: spinDisc 8s linear infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .ticket-inner {
-            position: relative;
-            z-index: 2;
-        }
-
-        .ticket-icon {
-            font-size: 3rem;
-            margin-bottom: 8px;
-            display: inline-block;
-            animation: floatEnvelope 2.5s ease-in-out infinite;
-        }
-
-        .ticket-title {
-            color: #ffd700;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-        }
-
-        .ticket-text {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.4;
-        }
-
-        /* ----- RESPONSIVE ----- */
-        @media (max-width: 500px) {
-            body {
-                overflow-y: auto;
-                align-items: flex-start;
-                padding: 20px 0;
-            }
-            #lock-screen, #delivery-screen {
-                padding: 2.5rem 1.5rem;
-                border-radius: 32px;
-            }
-            #lock-screen h1, #delivery-screen h1 {
-                font-size: 2rem;
-            }
-            .card {
-                padding: 1.8rem 1.2rem 1.5rem;
-                border-radius: 32px;
-                max-height: none;
-                overflow-y: visible;
-            }
-            .header .greeting {
-                font-size: 2.2rem;
-            }
-            .lyrics-box {
-                padding: 1rem 0.8rem;
-                margin: 1rem 0;
-                height: 190px;
-            }
-            .lyric-line {
-                font-size: 0.95rem;
-            }
-            .lyric-line.active {
-                font-size: 1.15rem;
-            }
-            .interactive-row button {
-                font-size: 0.9rem;
-                padding: 10px 24px;
-            }
-            .surprise-overlay .surprise-content {
-                padding: 1.8rem 1.6rem;
-                border-radius: 40px;
-                margin: 0 20px;
-            }
-            .surprise-overlay .surprise-content h2 {
-                font-size: 1.4rem;
-            }
-            .player-disc.giant-disc {
-                width: 180px;
-                height: 180px;
-            }
-            .player-disc.giant-disc::after {
-                width: 38px;
-                height: 38px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Come On - Music Player</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .player-container {
+      background: #181818;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .song-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .artist-name {
+      font-size: 1rem;
+      color: #b3b3b3;
+      margin-bottom: 20px;
+    }
+
+    audio {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .lyrics-container {
+      height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      border-top: 1px solid #282828;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scroll-behavior: smooth;
+    }
+
+    .lyrics-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .lyrics-container::-webkit-scrollbar-thumb {
+      background: #333;
+      border-radius: 3px;
+    }
+
+    .line {
+      font-size: 1.1rem;
+      color: #a7a7a7;
+      transition: color 0.3s ease, font-weight 0.3s ease, transform 0.3s ease;
+    }
+
+    .line.active {
+      color: #1db954;
+      font-weight: bold;
+      font-size: 1.25rem;
+      transform: scale(1.02);
+    }
+  </style>
 </head>
 <body>
 
-    <div class="bg-canvas" id="bgCanvas"></div>
+  <div class="player-container">
+    <div class="song-title">Come On</div>
+    <div class="artist-name">Mike Kayihura</div>
 
-    <div id="particles"></div>
+    <!-- Audio Player -->
+    <audio id="audio" controls>
+      <source src="Mike Kayihura - Come on .mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
 
-    <div class="heart-rain" id="heartRain"></div>
+    <!-- Synced Lyrics Container -->
+    <div id="lyrics-container" class="lyrics-container"></div>
+  </div>
 
-    <!-- LOCK SCREEN -->
-    <div id="lock-screen" class="glass-panel">
-        <div class="lock-heart">💖</div>
-        <h1>Enter the secret code</h1>
-        <div class="lock-input-group">
-            <input type="password" id="secretCodeInput" class="lock-input" placeholder="Give me the password...">
-            <div class="error-message" id="errorMsg">That's not it, my love! Try again. 💕</div>
-        </div>
-        <button class="cosmic-btn" onclick="checkPassword()">Unlock</button>
-    </div>
+  <script>
+    const lrcData = `[00:00.01]
+[00:08.20]Yo yo yo yo
+[00:13.50]Yo yo yo yo
+[00:22.30]Trying to be real,
+[00:25.10]With the only thing, such a good thing
+[00:27.50]Cause even much later,
+[00:29.60]Ill be waiting for you with the right song
+[00:31.90]The right song
+[00:33.40]Cinderella
+[00:36.20]Princess Leila, I know it’s not fair
+[00:39.50]I ride through with the sirens in the back seat
+[00:42.50]Siku hizi ni kama ni jailor
+[00:45.30]What it do
+[00:46.30]What it do ni njyewe tuvuye show
+[00:49.10]Ndashaka kumenya uracyari low
+[00:52.20]Nkuzamure tujyane real slow
+[00:54.40]I wanna know
+[00:56.20]What it do
+[00:57.30]What it do ni njyewe tuvuye show
+[01:00.20]Ndashaka kumenya uracyari low
+[01:03.10]Nkuzamure tujyane real slow
+[01:05.40]I wanna know
+[01:07.40]Shyira umutima aho mugitereko come on
+[01:10.20]Ntukihebe mpari ndi available come on
+[01:13.20]I wanna love you nkujyane higher come on
+[01:15.50]Ndashaka mbivuge mbishyire radio come on
+[01:18.20]Shyira umutima aho mugitereko come on
+[01:21.10]Ntukihebe mpari ndi available come on
+[01:24.10]I wanna love you nkujyane higher come on
+[01:26.50]Ndashaka mbivuge mbishyire radio come on
+[01:52.20]Sunny on the outside cold inside
+[01:54.80]It’s easy to see I keep freezing in the night
+[01:58.20]All this time I be saying I will fight
+[02:00.50]But there’s nobody there, no enemy in sight
+[02:03.50]Hello shawty, give me sometime
+[02:06.20]You know you my G, dance with me mumatara
+[02:09.10]Hello baby, shyiramo ingoma
+[02:11.40]Ndashaka kumenya girl what you drinking through the night
+[02:14.40]What it do
+[02:15.60]What it do ni njyewe tuvuye show
+[02:18.20]Ndashaka kumenya uracyari low
+[02:21.20]Nkuzamure tujyane real slow
+[02:25.30]What it do
+[02:26.50]What it do ni njyewe tuvuye show
+[02:29.40]Ndashaka kumenya uracyari low
+[02:32.40]Nkuzamure tujyane real slow
+[02:35.40]I wanna know
+[02:37.10]Shyira umutima aho mugitereko come on
+[02:39.60]Ntukihebe mpari ndi available come on
+[02:42.50]I wanna love you nkujyane higher come on
+[02:44.80]Ndashaka mbivuge mbishyire radio come on
+[02:47.50]Shyira umutima aho mugitereko come on
+[02:50.30]Nukiebe mpari ndi available come on
+[02:53.30]I wanna love you nkujyane higher come on
+[02:55.70]Ndashaka mbivuge mbishyire radio come on
+[03:21.20]Shyira umutima aho mugitereko come on
+[03:24.10]Ntukihebe mpari ndi available come on
+[03:27.10]I wanna love you nkujyane higher come on
+[03:29.50]Ndashaka mbivuge mbishyire radio come on`;
 
-    <!-- INTERMEDIATE DELIVERY SCREEN WITH EVASIVE BUTTON TRICK -->
-    <div id="delivery-screen" class="glass-panel">
-        <div class="cosmic-envelope">💌</div>
-        <h1>A Special Delivery</h1>
-        <p>Your secret code unlocked a private transmission. Ready to open your surprise?</p>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 1rem; position: relative; min-height: 80px;">
-            <button id="openGiftBtn" class="cosmic-btn" onclick="openMessage()" style="transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">Open My Gift 🎁</button>
-            <button id="dontClickBtn" class="cosmic-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; white-space: nowrap;">Don't click me🫣</button>
-        </div>
-    </div>
+    function parseLRC(lrc) {
+      const lines = lrc.split('\n');
+      const result = [];
+      const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2})\]/;
 
-    <!-- MAIN PAGE CARD -->
-    <div class="card glass-panel" id="mainCard">
-
-        <div class="header">
-            <div class="greeting">
-                hey <span class="name" id="herName">[Her Name]</span> 👋
-            </div>
-        </div>
-
-        <!-- SPOTIFY-STYLE SYNCED LYRICS BOX -->
-        <div class="lyrics-box" id="lyricsContainer">
-            <div class="lyrics-list" id="lyricsList"></div>
-        </div>
-
-        <div class="music-player">
-            <div class="player-disc" id="playerDisc"></div>
-            <div class="player-info">
-                <div class="track-title" id="trackTitle">Loading song...</div>
-                <div class="track-artist" id="trackArtist">Please wait</div>
-            </div>
-            <div class="player-controls">
-                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlay()">▶</button>
-            </div>
-            <audio id="bgMusic" loop src=""></audio>
-        </div>
-
-        <div class="interactive-row">
-            <button id="surpriseBtn">
-                <span class="emoji">🎁</span> surprise!
-            </button>
-            <button id="favSongBtn">
-                <span class="emoji">🎵</span> ma new favorite song
-            </button>
-        </div>
-    </div>
-
-    <!-- SECOND SONG CARD PAGE -->
-    <div class="card glass-panel" id="songCard">
-        <div style="text-align: left; margin-bottom: 1.5rem;">
-            <button class="cosmic-btn" onclick="backToMain()" style="padding: 8px 20px; font-size: 0.9rem;">
-                ← Back
-            </button>
-        </div>
-        
-        <div style="display: flex; justify-content: center; align-items: center; margin: 2rem 0;">
-            <div class="player-disc giant-disc" id="giantPlayerDisc"></div>
-        </div>
-
-        <div style="margin-top: 1.5rem; margin-bottom: 2rem;">
-            <h2 id="favSongTitle" style="color: #fff; font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255, 155, 203, 0.4);">Loading song...</h2>
-            <p id="favSongArtist" style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; font-weight: 600;">Please wait</p>
-        </div>
-
-        <div style="display: flex; justify-content: center; align-items: center;">
-            <button class="play-pause-btn" id="favPlayPauseBtn" onclick="toggleFavPlay()" style="width: 60px; height: 60px; font-size: 1.6rem; background: rgba(255, 107, 157, 0.2); border: 1px solid rgba(255, 107, 157, 0.4);">▶</button>
-        </div>
-        <audio id="favMusic" loop src=""></audio>
-    </div>
-
-    <!-- SURPRISE OVERLAY -->
-    <div class="surprise-overlay" id="surpriseOverlay">
-        <div class="surprise-content">
-            <h2>You unlocked a reward!</h2>
-            <div class="ticket-wrapper">
-                <div class="ticket-inner">
-                    <span class="ticket-icon" id="ticketIcon">🎟️</span>
-                    <div class="ticket-title" id="ticketTitle">Cosmic Coupon</div>
-                    <div class="ticket-text" id="ticketText">Good for 1 Movie Night where you choose all the snacks! 🍿</div>
-                </div>
-            </div>
-            <button class="close-surprise" id="closeSurprise">Claim Coupon ✨</button>
-        </div>
-    </div>
-
-    <script>
-        // ============================================================
-        //  🎯  CUSTOMIZE CONFIG HERE
-        // ============================================================
-
-        const CONFIG = {
-            secretPassword: 'bigmama',
-            herName: 'Big Mama',
-
-            // 🎵 Song 1 Settings (Night Changes by One Direction)
-            songTitle: 'Night Changes',
-            songArtist: 'One Direction',
-            musicUrl: 'One Direction - Night Changes.mp3', // Make sure your audio file matches this name
-
-            // 🎤 Timed Lyrics (Adjust numbers slightly if your specific mp3 file alignment needs tweaking)
-            syncedLyrics: [
-                { time: 0.0, text: "🎵 (Intro)" },
-                { time: 8.23, text: "Going out tonight, changes into something red" },
-  { time: 12.65, text: "Her mother doesn't like that kind of dress" },
-  { time: 16.26, text: "Everything she never had, she's showing off" },
-  { time: 24.01, text: "Driving too fast, moon is breaking through her hair" },
-  { time: 28.65, text: "She's headin' for something that she won't forget" },
-  { time: 32.15, text: "Having no regrets is all that she really wants" },
-  { time: 40.24, text: "We're only getting older, baby" },
-  { time: 44.48, text: "And I've been thinking about it lately" },
-  { time: 48.84, text: "Does it ever drive you crazy" },
-  { time: 52.19, text: "Just how fast the night changes?" },
-  { time: 56.72, text: "Everything that you've ever dreamed of" },
-  { time: 60.64, text: "Disappearing when you wake up" },
-  { time: 64.68, text: "But there's nothing to be afraid of" },
-  { time: 68.05, text: "Even when the night changes" },
-  { time: 72.73, text: "It will never change me and you" },
-  { time: 80.13, text: "Chasing her tonight, doubts are running 'round her head" },
-  { time: 84.78, text: "He's waiting, hides behind a cigarette" },
-  { time: 88.25, text: "Heart is beating loud and she doesn't want it to stop" },
-  { time: 96.05, text: "Moving too fast, Moon is lighting up her skin" },
-  { time: 100.87, text: "She's falling, doesn't even know it yet" },
-  { time: 104.22, text: "Having no regrets is all that she really wants" },
-  { time: 112.51, text: "We're only getting older, baby" },
-  { time: 116.61, text: "And I've been thinking about it lately" },
-  { time: 120.74, text: "Does it ever drive you crazy" },
-  { time: 124.16, text: "Just how fast the night changes?" },
-  { time: 128.63, text: "Everything that you've ever dreamed of" },
-  { time: 132.72, text: "Disappearing when you wake up" },
-  { time: 136.73, text: "But there's nothing to be afraid of" },
-  { time: 140.31, text: "Even when the night changes" },
-  { time: 144.88, text: "It will never change me and you" },
-  { time: 160.22, text: "Going out tonight, changes into something red" },
-  { time: 164.63, text: "Her mother doesn't like that kind of dress" },
-  { time: 168.03, text: "Reminds her of the missing piece of innocence she lost" },
-  { time: 174.28, text: "We're only getting older, baby" },
-  { time: 178.45, text: "And I've been thinking about it lately" },
-  { time: 182.69, text: "Does it ever drive you crazy" },
-  { time: 186.24, text: "Just how fast the night changes?" },
-  { time: 190.89, text: "Everything that you've ever dreamed of" },
-  { time: 194.67, text: "Disappearing when you wake up" },
-  { time: 198.78, text: "But there's nothing to be afraid of" },
-  { time: 202.08, text: "Even when the night changes" },
-  { time: 206.60, text: "It will never change, baby" },
-  { time: 210.63, text: "It will never change, baby" },
-  { time: 214.67, text: "It will never change me and you" }
-            ],
-
-            // 💜 Favorite Song Settings (Song 2)
-            favSongTitle: 'that part',
-            favSongArtist: 'Lauren Spencer Smith',
-            favMusicUrl: 'that part.mp3',
-
-            // Visual elements
-            particleCount: 200,
-            rainHeartCount: 18,
-
-            // Coupons & Rewards
-            surprises: [
-                { icon: "🎟️", title: "Cozy Coupon", text: "Good for 1 Movie Night where I buy all the snacks and you choose the movie! 🍿" },
-                { icon: "💫", title: "Universal Truth", text: "U are the absolute prettiest girl." },
-                { icon: "🤗", title: "Warp Hug", text: "Redeemable anytime u want. It'll be a long, bone-crushing hug! ❤️" },
-                { icon: "👑", title: "Princess Treatment", text: "Good for 1 whole day of me doing whatever U say without any complaints! 💆‍♀️" }
-            ]
-        };
-
-        // ============================================================
-        //  🚀 IMPLEMENTATION LOGIC
-        // ============================================================
-
-        const nameEl = document.getElementById('herName');
-        const surpriseBtn = document.getElementById('surpriseBtn');
-        const favSongBtn = document.getElementById('favSongBtn');
-        const card = document.getElementById('mainCard');
-        const songCard = document.getElementById('songCard');
-        const particlesContainer = document.getElementById('particles');
-        const heartRainContainer = document.getElementById('heartRain');
-        const lockScreen = document.getElementById('lock-screen');
-        const deliveryScreen = document.getElementById('delivery-screen');
-        const secretCodeInput = document.getElementById('secretCodeInput');
-        const errorMsg = document.getElementById('errorMsg');
-
-        // Teleport Button Elements
-        const openGiftBtn = document.getElementById('openGiftBtn');
-        const dontClickBtn = document.getElementById('dontClickBtn');
-        let openBtnScale = 1;
-
-        // Audio elements (Song 1)
-        const bgMusic = document.getElementById('bgMusic');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const playerDisc = document.getElementById('playerDisc');
-        const trackTitle = document.getElementById('trackTitle');
-        const trackArtist = document.getElementById('trackArtist');
-
-        // Synced Lyrics Elements
-        const lyricsList = document.getElementById('lyricsList');
-        const lyricsContainer = document.getElementById('lyricsContainer');
-        let currentActiveIndex = -1;
-
-        // Audio elements (Song 2)
-        const favMusic = document.getElementById('favMusic');
-        const favPlayPauseBtn = document.getElementById('favPlayPauseBtn');
-        const giantPlayerDisc = document.getElementById('giantPlayerDisc');
-        const favSongTitle = document.getElementById('favSongTitle');
-        const favSongArtist = document.getElementById('favSongArtist');
-
-        // Surprise Overlay
-        const surpriseOverlay = document.getElementById('surpriseOverlay');
-        const closeSurprise = document.getElementById('closeSurprise');
-        const ticketIcon = document.getElementById('ticketIcon');
-        const ticketTitle = document.getElementById('ticketTitle');
-        const ticketText = document.getElementById('ticketText');
-
-        let authenticated = false;
-
-        // --- Initialize Page Config ---
-        nameEl.textContent = CONFIG.herName;
-        trackTitle.textContent = CONFIG.songTitle;
-        trackArtist.textContent = CONFIG.songArtist;
-        bgMusic.src = CONFIG.musicUrl;
-
-        favSongTitle.textContent = CONFIG.favSongTitle;
-        favSongArtist.textContent = CONFIG.favSongArtist;
-        favMusic.src = CONFIG.favMusicUrl;
-
-        // --- Render Synced Lyrics DOM ---
-        function renderSyncedLyrics() {
-            lyricsList.innerHTML = '';
-            CONFIG.syncedLyrics.forEach((line, index) => {
-                const div = document.createElement('div');
-                div.className = 'lyric-line';
-                div.textContent = line.text;
-                div.id = `lyric-${index}`;
-
-                // Click line to skip audio to that time
-                div.onclick = () => {
-                    bgMusic.currentTime = line.time;
-                };
-
-                lyricsList.appendChild(div);
-            });
+      lines.forEach(line => {
+        const match = timeRegex.exec(line);
+        if (match) {
+          const minutes = parseInt(match[1], 10);
+          const seconds = parseInt(match[2], 10);
+          const milliseconds = parseInt(match[3], 10) * 10;
+          const time = minutes * 60 + seconds + milliseconds / 1000;
+          const text = line.replace(timeRegex, '').trim();
+          if (text.length > 0) {
+            result.push({ time, text });
+          }
         }
-        renderSyncedLyrics();
+      });
+      return result;
+    }
 
-        // --- Audio Time Update Listener (Spotify-style Sync & Auto-scroll) ---
-        bgMusic.addEventListener('timeupdate', () => {
-            const currentTime = bgMusic.currentTime;
+    const lyrics = parseLRC(lrcData);
+    const lyricsContainer = document.getElementById('lyrics-container');
+    const audio = document.getElementById('audio');
 
-            let activeIndex = CONFIG.syncedLyrics.findIndex((line, i) => {
-                const nextLineTime = CONFIG.syncedLyrics[i + 1] ? CONFIG.syncedLyrics[i + 1].time : Infinity;
-                return currentTime >= line.time && currentTime < nextLineTime;
-            });
+    // Build DOM elements for lyrics
+    lyrics.forEach((item, index) => {
+      const el = document.createElement('div');
+      el.classList.add('line');
+      el.id = `line-${index}`;
+      el.textContent = item.text;
+      lyricsContainer.appendChild(el);
+    });
 
-            if (activeIndex !== -1 && activeIndex !== currentActiveIndex) {
-                if (currentActiveIndex !== -1) {
-                    const prevEl = document.getElementById(`lyric-${currentActiveIndex}`);
-                    if (prevEl) prevEl.classList.remove('active');
-                }
+    // Time update event listener
+    audio.addEventListener('timeupdate', () => {
+      const currentTime = audio.currentTime;
+      let activeIndex = -1;
 
-                const activeEl = document.getElementById(`lyric-${activeIndex}`);
-                if (activeEl) {
-                    activeEl.classList.add('active');
-
-                    // Smoothly center the active line
-                    const containerHeight = lyricsContainer.clientHeight;
-                    const lineOffset = activeEl.offsetTop;
-                    const lineHeight = activeEl.clientHeight;
-
-                    lyricsContainer.scrollTop = lineOffset - (containerHeight / 2) + (lineHeight / 2);
-                }
-
-                currentActiveIndex = activeIndex;
-            }
-        });
-
-        // --- Password Check ---
-        function checkPassword() {
-            const entered = secretCodeInput.value.trim().toLowerCase();
-            const correct = CONFIG.secretPassword.toLowerCase();
-
-            if (entered === correct) {
-                authenticated = true;
-                errorMsg.style.display = 'none';
-
-                lockScreen.style.opacity = '0';
-                lockScreen.style.transform = 'scale(0.9) translateY(-20px)';
-
-                setTimeout(() => {
-                    lockScreen.style.display = 'none';
-                    deliveryScreen.style.display = 'block';
-                    setTimeout(() => {
-                        deliveryScreen.style.opacity = '1';
-                        deliveryScreen.style.transform = 'scale(1)';
-                    }, 50);
-                }, 600);
-
-                spawnRandomHearts(10, '✨');
-            } else {
-                errorMsg.style.display = 'block';
-                secretCodeInput.style.borderColor = '#ff4a7d';
-                setTimeout(() => {
-                    secretCodeInput.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                }, 1500);
-            }
+      for (let i = 0; i < lyrics.length; i++) {
+        if (currentTime >= lyrics[i].time) {
+          activeIndex = i;
+        } else {
+          break;
         }
+      }
 
-        // --- Evasive Button Action ---
-        dontClickBtn.addEventListener('click', () => {
-            if (dontClickBtn.parentElement !== document.body) {
-                document.body.appendChild(dontClickBtn);
-            }
-
-            openBtnScale += 0.25;
-            openGiftBtn.style.transform = `scale(${openBtnScale})`;
-
-            dontClickBtn.style.position = 'fixed';
-            dontClickBtn.style.margin = '0';
-            dontClickBtn.style.zIndex = '1000';
-
-            const btnWidth = dontClickBtn.offsetWidth || 150;
-            const btnHeight = dontClickBtn.offsetHeight || 45;
-
-            const maxX = window.innerWidth - btnWidth - 20;
-            const maxY = window.innerHeight - btnHeight - 20;
-
-            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
-
-            dontClickBtn.style.left = randomX + 'px';
-            dontClickBtn.style.top = randomY + 'px';
-
-            spawnHeart(randomX + btnWidth / 2, randomY + btnHeight / 2, '🫣');
-        });
-
-        // --- Unwrapping & Main Card Reveal ---
-        function openMessage() {
-            if (!authenticated) return;
-
-            deliveryScreen.style.opacity = '0';
-            deliveryScreen.style.transform = 'scale(0.9) translateY(-20px)';
-            dontClickBtn.style.display = 'none';
-
-            setTimeout(() => {
-                deliveryScreen.style.display = 'none';
-                card.style.display = 'block';
-                
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'scale(1)';
-                    
-                    bgMusic.play().then(() => {
-                        playPauseBtn.textContent = '⏸';
-                        playerDisc.classList.add('playing');
-                    }).catch(err => console.log("Autoplay caught:", err));
-
-                }, 50);
-            }, 600);
-
-            spawnRandomHearts(25, '✨');
-            spawnRandomHearts(15, '💖');
+      lyrics.forEach((_, index) => {
+        const lineEl = document.getElementById(`line-${index}`);
+        if (index === activeIndex) {
+          if (!lineEl.classList.contains('active')) {
+            lineEl.classList.add('active');
+            lineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        } else {
+          lineEl.classList.remove('active');
         }
-
-        // --- Audio Controls ---
-        function togglePlay() {
-            if (bgMusic.paused) {
-                if (!favMusic.paused) {
-                    favMusic.pause();
-                    favPlayPauseBtn.textContent = '▶';
-                    giantPlayerDisc.classList.remove('playing');
-                }
-                bgMusic.play();
-                playPauseBtn.textContent = '⏸';
-                playerDisc.classList.add('playing');
-            } else {
-                bgMusic.pause();
-                playPauseBtn.textContent = '▶';
-                playerDisc.classList.remove('playing');
-            }
-        }
-
-        function toggleFavPlay() {
-            if (favMusic.paused) {
-                if (!bgMusic.paused) {
-                    bgMusic.pause();
-                    playPauseBtn.textContent = '▶';
-                    playerDisc.classList.remove('playing');
-                }
-                favMusic.play();
-                favPlayPauseBtn.textContent = '⏸';
-                giantPlayerDisc.classList.add('playing');
-            } else {
-                favMusic.pause();
-                favPlayPauseBtn.textContent = '▶';
-                giantPlayerDisc.classList.remove('playing');
-            }
-        }
-
-        // --- Page Navigation Handlers ---
-        favSongBtn.addEventListener('click', () => {
-            if (!bgMusic.paused) {
-                bgMusic.pause();
-                playPauseBtn.textContent = '▶';
-                playerDisc.classList.remove('playing');
-            }
-
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                card.style.display = 'none';
-                songCard.style.display = 'block';
-                setTimeout(() => {
-                    songCard.style.opacity = '1';
-                    songCard.style.transform = 'scale(1)';
-                    favMusic.play().then(() => {
-                        favPlayPauseBtn.textContent = '⏸';
-                        giantPlayerDisc.classList.add('playing');
-                    }).catch(err => console.log("Autoplay caught:", err));
-                }, 50);
-            }, 600);
-        });
-
-        function backToMain() {
-            if (!favMusic.paused) {
-                favMusic.pause();
-                favPlayPauseBtn.textContent = '▶';
-                giantPlayerDisc.classList.remove('playing');
-            }
-
-            songCard.style.opacity = '0';
-            songCard.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                songCard.style.display = 'none';
-                card.style.display = 'block';
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'scale(1)';
-                }, 50);
-            }, 600);
-        }
-
-        secretCodeInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkPassword();
-        });
-
-        // --- Visual Effects (Particles & Floating Hearts) ---
-        function spawnHeart(x, y, emoji = '💕') {
-            const el = document.createElement('div');
-            el.className = 'spawn-heart';
-            el.textContent = emoji;
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-
-            const tx = (Math.random() - 0.5) * 260;
-            const ty = -Math.random() * 300 - 80;
-            el.style.setProperty('--tx', tx + 'px');
-            el.style.setProperty('--ty', ty + 'px');
-
-            const size = 1.2 + Math.random() * 1.2;
-            el.style.fontSize = (1.6 * size) + 'rem';
-
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 2000);
-        }
-
-        function spawnRandomHearts(count, emoji = '💕') {
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
-            for (let i = 0; i < count; i++) {
-                const x = Math.random() * vw;
-                const y = Math.random() * vh;
-                setTimeout(() => spawnHeart(x, y, emoji), i * 60);
-            }
-        }
-
-        document.addEventListener('click', (e) => {
-            const target = e.target.closest('button, .close-surprise, .glass-panel, .lyric-line');
-            if (target) return;
-            const emojis = ['💕', '❤️', '✨', '🌸', '💖', '💗', '🩷'];
-            const emoji = emojis[Math.floor(Math.random() * emojis.length)];
-            spawnHeart(e.clientX, e.clientY, emoji);
-        });
-
-        // --- Surprise Button Overlay ---
-        surpriseBtn.addEventListener('click', () => {
-            document.body.classList.add('warp');
-            
-            const selection = CONFIG.surprises[Math.floor(Math.random() * CONFIG.surprises.length)];
-            ticketIcon.textContent = selection.icon;
-            ticketTitle.textContent = selection.title;
-            ticketText.textContent = selection.text;
-
-            const confettiEmojis = ['🎉', '✨', '🌟', '💫', '🎁', '🎟️', '🌸', '💖', '🍿', '👑', '🤗'];
-            for (let i = 0; i < 45; i++) {
-                const emoji = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                setTimeout(() => spawnHeart(x, y, emoji), i * 35);
-            }
-
-            setTimeout(() => {
-                surpriseOverlay.classList.add('show');
-                document.body.classList.remove('warp');
-            }, 600);
-        });
-
-        closeSurprise.addEventListener('click', () => surpriseOverlay.classList.remove('show'));
-        surpriseOverlay.addEventListener('click', (e) => {
-            if (e.target === surpriseOverlay) surpriseOverlay.classList.remove('show');
-        });
-
-        // --- Background Stars & Rain ---
-        function createParticles() {
-            const count = CONFIG.particleCount;
-            for (let i = 0; i < count; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const size = 1.5 + Math.random() * 3.5;
-                p.style.width = size + 'px';
-                p.style.height = size + 'px';
-                p.style.left = Math.random() * 100 + '%';
-                p.style.animationDuration = (12 + Math.random() * 28) + 's';
-                p.style.animationDelay = (Math.random() * 20) + 's';
-                p.style.opacity = 0.2 + Math.random() * 0.5;
-                particlesContainer.appendChild(p);
-            }
-        }
-        createParticles();
-
-        function createHeartRain() {
-            const count = CONFIG.rainHeartCount;
-            const emojis = ['♥', '♡', '❤', '💕', '💗'];
-            for (let i = 0; i < count; i++) {
-                const span = document.createElement('span');
-                span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                span.style.left = Math.random() * 100 + '%';
-                span.style.fontSize = (0.8 + Math.random() * 1.6) + 'rem';
-                span.style.animationDuration = (15 + Math.random() * 25) + 's';
-                span.style.animationDelay = (Math.random() * 30) + 's';
-                span.style.opacity = 0.08 + Math.random() * 0.15;
-                heartRainContainer.appendChild(span);
-            }
-        }
-        createHeartRain();
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') surpriseOverlay.classList.remove('show');
-        });
-    </script>
+      });
+    });
+  </script>
 
 </body>
 </html>
