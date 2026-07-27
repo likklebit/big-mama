@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>For You 💕</title>
+    <title>Our Frequency 💛</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
     <style>
         /* ----- RESET & BASE ----- */
         *,
@@ -17,13 +17,27 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --void: #12080a;
+            --deep: #2a1013;
+            --wine: #4a1c1a;
+            --ember: #ff7a45;
+            --ember-dim: #c9552b;
+            --gold: #ffc857;
+            --cream: #fff3e6;
+            --muted: rgba(255, 243, 230, 0.6);
+            --glass-bg: rgba(255, 180, 120, 0.06);
+            --glass-border: rgba(255, 200, 150, 0.16);
+            --danger: #ff5c5c;
+        }
+
         body {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: #0b081a;
+            background: var(--void);
             overflow: hidden;
         }
 
@@ -35,7 +49,7 @@
             width: 100%;
             height: 100%;
             z-index: 0;
-            background: linear-gradient(135deg, #0b081a 0%, #1a0f2e 25%, #2d1b3d 50%, #1a0f2e 75%, #0b081a 100%);
+            background: linear-gradient(135deg, var(--void) 0%, var(--deep) 30%, var(--wine) 55%, var(--deep) 80%, var(--void) 100%);
             background-size: 400% 400%;
             animation: gradientShift 18s ease infinite;
         }
@@ -61,9 +75,9 @@
         .particle {
             position: absolute;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 200, 140, 0.55);
             animation: floatParticle linear infinite;
-            box-shadow: 0 0 12px rgba(255, 200, 255, 0.3);
+            box-shadow: 0 0 12px rgba(255, 150, 80, 0.35);
             transition: transform 0.5s ease;
         }
 
@@ -74,14 +88,7 @@
             100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
         }
 
-        /* Particle Warp Speed effect (triggered on Surprise) */
-        .warp .particle {
-            animation-duration: 0.8s !important;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.95);
-        }
-
-        /* ----- HEART RAIN (background floating hearts) ----- */
+        /* ----- NOTE RAIN (background floating music notes) ----- */
         .heart-rain {
             position: fixed;
             top: 0;
@@ -97,6 +104,7 @@
             position: absolute;
             display: block;
             font-size: 1.6rem;
+            color: var(--gold);
             animation: heartFall linear infinite;
             opacity: 0.25;
             user-select: none;
@@ -113,11 +121,11 @@
         .glass-panel {
             position: relative;
             z-index: 10;
-            background: rgba(255, 255, 255, 0.07);
+            background: var(--glass-bg);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 200, 150, 0.04) inset;
             text-align: center;
             transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -131,25 +139,64 @@
         }
 
         .lock-heart {
-            font-size: 3rem;
-            color: #ff6b9d;
-            margin-bottom: 1.5rem;
-            animation: pulse 1.5s infinite;
+            font-size: 2.8rem;
+            margin-bottom: 1.4rem;
+            animation: pulse 1.8s infinite;
             display: inline-block;
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); filter: drop-shadow(0 0 15px rgba(255, 107, 157, 0.6)); }
+            50% { transform: scale(1.12); filter: drop-shadow(0 0 15px rgba(255, 122, 69, 0.6)); }
             100% { transform: scale(1); }
         }
 
         .glass-panel h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-weight: 600;
+            font-size: 2.3rem;
+            color: var(--cream);
+            margin-bottom: 1.6rem;
+            text-shadow: 0 0 30px rgba(255, 150, 80, 0.25);
+        }
+
+        /* ----- TUNING DIAL (lock-screen signature element) ----- */
+        .freq-dial {
+            position: relative;
+            height: 30px;
+            border-radius: 20px;
+            background-image: repeating-linear-gradient(90deg, rgba(255, 200, 150, 0.18) 0 2px, transparent 2px 10px);
+            background-color: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 0.7rem;
+            overflow: hidden;
+        }
+
+        .freq-dial .dial-needle {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            width: 3px;
+            border-radius: 2px;
+            background: var(--ember);
+            box-shadow: 0 0 10px var(--ember);
+            animation: seekFreq 4.5s ease-in-out infinite;
+        }
+
+        @keyframes seekFreq {
+            0%, 100% { left: 8%; }
+            50% { left: 88%; }
+        }
+
+        .dial-readout {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2.5px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 1.3rem;
+            opacity: 0.85;
         }
 
         .lock-input-group {
@@ -160,35 +207,45 @@
         .lock-input {
             width: 100%;
             padding: 14px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            color: #fff;
-            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            color: var(--cream);
+            font-family: 'IBM Plex Mono', monospace;
+            letter-spacing: 3px;
+            font-size: 1.05rem;
             text-align: center;
             outline: none;
             transition: all 0.3s ease;
         }
 
+        .lock-input::placeholder {
+            letter-spacing: normal;
+            font-family: 'Space Grotesk', sans-serif;
+            color: rgba(255, 243, 230, 0.35);
+        }
+
         .lock-input:focus {
-            border-color: #ff6b9d;
-            box-shadow: 0 0 15px rgba(255, 107, 157, 0.3);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--ember);
+            box-shadow: 0 0 15px rgba(255, 122, 69, 0.35);
+            background: rgba(0, 0, 0, 0.35);
         }
 
         .cosmic-btn {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            font-size: 1rem;
-            padding: 12px 35px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            padding: 12px 34px;
             border: none;
-            border-radius: 60px;
-            background: rgba(255, 107, 157, 0.2);
-            color: #fff;
-            border: 1px solid rgba(255, 107, 157, 0.3);
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--ember), var(--ember-dim));
+            color: #2a1208;
+            border: 1px solid rgba(255, 190, 140, 0.4);
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -196,13 +253,12 @@
 
         .cosmic-btn:hover {
             transform: translateY(-2px);
-            background: rgba(255, 107, 157, 0.35);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.3);
+            filter: brightness(1.08);
+            box-shadow: 0 10px 30px rgba(255, 122, 69, 0.4);
         }
 
         .error-message {
-            color: #ff4a7d;
+            color: var(--danger);
             font-size: 0.85rem;
             margin-top: 10px;
             display: none;
@@ -225,7 +281,7 @@
             margin-bottom: 2rem;
             display: inline-block;
             animation: floatEnvelope 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(255, 155, 203, 0.4));
+            filter: drop-shadow(0 0 20px rgba(255, 170, 110, 0.4));
         }
 
         @keyframes floatEnvelope {
@@ -235,7 +291,7 @@
         }
 
         #delivery-screen p {
-            color: rgba(255, 255, 255, 0.85);
+            color: var(--muted);
             font-size: 1.1rem;
             line-height: 1.6;
             margin-bottom: 2.5rem;
@@ -271,17 +327,18 @@
         }
 
         .header .greeting {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255, 150, 200, 0.3);
+            font-family: 'Fraunces', serif;
+            font-style: italic;
+            font-size: 2.7rem;
+            font-weight: 600;
+            color: var(--cream);
+            text-shadow: 0 0 30px rgba(255, 150, 80, 0.25);
             line-height: 1.2;
         }
 
         .header .greeting .name {
-            color: #ff9bcb;
-            background: linear-gradient(135deg, #ff9bcb, #ff6b9d);
+            color: var(--gold);
+            background: linear-gradient(135deg, var(--gold), var(--ember));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -289,16 +346,19 @@
 
         /* ----- SPOTIFY-STYLE LYRICS CONTAINER ----- */
         .lyrics-box {
-            background: rgba(0, 0, 0, 0.25);
+            background-image:
+                repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
+                linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42));
             border-radius: 28px;
             padding: 1.5rem 1.2rem;
             margin: 1.5rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 180, 120, 0.14);
             height: 220px;
             overflow-y: auto;
             scroll-behavior: smooth;
             text-align: center;
             position: relative;
+            box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.5);
         }
 
         .lyrics-box::-webkit-scrollbar {
@@ -313,9 +373,11 @@
         }
 
         .lyric-line {
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 1.05rem;
-            font-weight: 700;
+            font-family: 'IBM Plex Mono', monospace;
+            color: rgba(255, 200, 150, 0.28);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
             cursor: pointer;
             filter: blur(0.5px);
@@ -323,17 +385,17 @@
         }
 
         .lyric-line.active {
-            color: #ffffff;
-            font-size: 1.3rem;
+            color: var(--gold);
+            font-size: 1.2rem;
             filter: blur(0);
-            text-shadow: 0 0 15px rgba(255, 107, 157, 0.8), 0 0 30px rgba(255, 107, 157, 0.4);
+            text-shadow: 0 0 15px rgba(255, 200, 100, 0.85), 0 0 30px rgba(255, 140, 60, 0.45);
             transform: scale(1.04);
         }
 
         /* ----- MUSIC PLAYER ----- */
         .music-player {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 180, 120, 0.12);
             border-radius: 24px;
             padding: 12px 18px;
             margin: 1.2rem 0;
@@ -343,13 +405,16 @@
             text-align: left;
         }
 
+        /* Tuning-dial "disc" — ticked amber knob instead of a vinyl record */
         .player-disc {
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #1c1c1c 0%, #3a3a3a 50%, #1c1c1c 100%);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            background:
+                repeating-conic-gradient(from 0deg, var(--gold) 0deg 2deg, transparent 2deg 30deg),
+                radial-gradient(circle at center, #3a1c12 0%, #1c0d08 75%);
+            border: 2px solid rgba(255, 200, 150, 0.3);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.4), 0 0 18px rgba(255, 150, 60, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -361,9 +426,9 @@
             content: '';
             width: 14px;
             height: 14px;
-            background: #0b081a;
+            background: var(--void);
             border-radius: 50%;
-            border: 2px solid rgba(255, 155, 203, 0.5);
+            border: 2px solid var(--ember);
         }
 
         .player-disc.playing {
@@ -380,7 +445,7 @@
         }
 
         .track-title {
-            color: #fff;
+            color: var(--cream);
             font-size: 0.95rem;
             font-weight: 700;
             white-space: nowrap;
@@ -389,7 +454,7 @@
         }
 
         .track-artist {
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--muted);
             font-size: 0.8rem;
             white-space: nowrap;
             overflow: hidden;
@@ -408,9 +473,9 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
+            border: 1px solid rgba(255, 180, 120, 0.25);
+            background: rgba(255, 180, 120, 0.12);
+            color: var(--gold);
             font-size: 0.95rem;
             display: flex;
             align-items: center;
@@ -420,7 +485,7 @@
         }
 
         .play-pause-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 180, 120, 0.22);
             transform: scale(1.08);
         }
 
@@ -434,30 +499,32 @@
         }
 
         .interactive-row button {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            font-size: 1rem;
-            padding: 12px 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.85rem;
+            padding: 12px 28px;
             border: none;
-            border-radius: 60px;
-            background: rgba(255, 107, 157, 0.2);
-            color: #fff;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255, 122, 69, 0.22), rgba(255, 200, 87, 0.14));
+            color: var(--cream);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 107, 157, 0.3);
+            border: 1px solid rgba(255, 180, 120, 0.3);
             cursor: pointer;
             transition: all 0.25s ease;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
         }
 
         .interactive-row button:hover {
             transform: translateY(-3px) scale(1.03);
-            background: rgba(255, 107, 157, 0.35);
-            border-color: rgba(255, 107, 157, 0.5);
-            box-shadow: 0 8px 30px rgba(255, 107, 157, 0.35);
+            background: linear-gradient(135deg, rgba(255, 122, 69, 0.38), rgba(255, 200, 87, 0.24));
+            border-color: rgba(255, 180, 120, 0.5);
+            box-shadow: 0 8px 30px rgba(255, 122, 69, 0.3);
         }
 
         .interactive-row button:active {
@@ -488,6 +555,7 @@
             pointer-events: none;
             z-index: 50;
             font-size: 2rem;
+            color: var(--gold);
             animation: heartSpawn 1.8s ease-out forwards;
             user-select: none;
         }
@@ -495,124 +563,6 @@
         @keyframes heartSpawn {
             0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--tx), var(--ty)) scale(1.6) rotate(40deg); opacity: 0; }
-        }
-
-        /* ----- SURPRISE OVERLAY ----- */
-        .surprise-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .surprise-overlay.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .surprise-overlay .surprise-content {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 2.4rem 3rem;
-            text-align: center;
-            border: 2px dashed rgba(255, 215, 0, 0.4);
-            transform: scale(0.8);
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 40px 100px rgba(255, 215, 0, 0.15);
-            max-width: 450px;
-            width: 90%;
-        }
-
-        .surprise-overlay.show .surprise-content {
-            transform: scale(1);
-        }
-
-        .surprise-overlay .surprise-content h2 {
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-family: 'Dancing Script', cursive;
-        }
-
-        .surprise-overlay .surprise-content .close-surprise {
-            margin-top: 1.5rem;
-            padding: 8px 28px;
-            border: none;
-            border-radius: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.2s ease;
-        }
-
-        .surprise-overlay .surprise-content .close-surprise:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .ticket-wrapper {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 100, 150, 0.05) 100%);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 24px;
-            padding: 20px;
-            margin-top: 15px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ticket-wrapper::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            animation: spinDisc 8s linear infinite;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .ticket-inner {
-            position: relative;
-            z-index: 2;
-        }
-
-        .ticket-icon {
-            font-size: 3rem;
-            margin-bottom: 8px;
-            display: inline-block;
-            animation: floatEnvelope 2.5s ease-in-out infinite;
-        }
-
-        .ticket-title {
-            color: #ffd700;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 800;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-        }
-
-        .ticket-text {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.4;
         }
 
         /* ----- RESPONSIVE ----- */
@@ -649,17 +599,16 @@
             .lyric-line.active {
                 font-size: 1.15rem;
             }
+            .freq-dial {
+                height: 26px;
+            }
+            .dial-readout {
+                font-size: 0.62rem;
+                letter-spacing: 1.5px;
+            }
             .interactive-row button {
                 font-size: 0.9rem;
                 padding: 10px 24px;
-            }
-            .surprise-overlay .surprise-content {
-                padding: 1.8rem 1.6rem;
-                border-radius: 40px;
-                margin: 0 20px;
-            }
-            .surprise-overlay .surprise-content h2 {
-                font-size: 1.4rem;
             }
             .player-disc.giant-disc {
                 width: 180px;
@@ -682,23 +631,24 @@
 
     <!-- LOCK SCREEN -->
     <div id="lock-screen" class="glass-panel">
-        <div class="lock-heart">💖</div>
+        <div class="lock-heart">📻</div>
         <h1>Enter the secret code</h1>
+        <div class="freq-dial"><div class="dial-needle"></div></div>
+        <div class="dial-readout" id="dialReadout">SEARCHING FOR SIGNAL... 💛</div>
         <div class="lock-input-group">
-            <input type="password" id="secretCodeInput" class="lock-input" placeholder="Give me the password...">
-            <div class="error-message" id="errorMsg">That's not it, my love! Try again. 💕</div>
+            <input type="password" id="secretCodeInput" class="lock-input" placeholder="Enter the password...">
+            <div class="error-message" id="errorMsg">Wrong code — try again. 📻</div>
         </div>
         <button class="cosmic-btn" onclick="checkPassword()">Unlock</button>
     </div>
 
-    <!-- INTERMEDIATE DELIVERY SCREEN WITH EVASIVE BUTTON TRICK -->
+    <!-- INTERMEDIATE DELIVERY SCREEN -->
     <div id="delivery-screen" class="glass-panel">
-        <div class="cosmic-envelope">💌</div>
+        <div class="cosmic-envelope">🎙️</div>
         <h1>A Special Delivery</h1>
-        <p>Your secret code unlocked a private transmission. Ready to open your surprise?</p>
-        <div style="display: flex; justify-content: center; align-items: center; gap: 15px; flex-wrap: wrap; margin-top: 1rem; position: relative; min-height: 80px;">
-            <button id="openGiftBtn" class="cosmic-btn" onclick="openMessage()" style="transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);">Open My Gift 🎁</button>
-            <button id="dontClickBtn" class="cosmic-btn" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.2); transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; white-space: nowrap;">Don't click me🫣</button>
+        <p>Hey Sexy ting🫣  aight go ahead and press that button real quick😉</p>
+        <div style="display: flex; justify-content: center; align-items: center; margin-top: 1rem;">
+            <button id="openGiftBtn" class="cosmic-btn" onclick="openMessage()">Press Play ▶</button>
         </div>
     </div>
 
@@ -707,7 +657,7 @@
 
         <div class="header">
             <div class="greeting">
-                hey <span class="name" id="herName">[Her Name]</span> 👋
+                hey <span class="name" id="herName">[Her Name]</span> 🎧
             </div>
         </div>
 
@@ -729,11 +679,8 @@
         </div>
 
         <div class="interactive-row">
-            <button id="surpriseBtn">
-                <span class="emoji">🎁</span> surprise!
-            </button>
             <button id="favSongBtn">
-                <span class="emoji">🎵</span> ma new favorite song
+                <span class="emoji">🎶</span> flip the tape
             </button>
         </div>
     </div>
@@ -759,21 +706,6 @@
             <button class="play-pause-btn" id="favPlayPauseBtn" onclick="toggleFavPlay()" style="width: 60px; height: 60px; font-size: 1.6rem; background: rgba(255, 107, 157, 0.2); border: 1px solid rgba(255, 107, 157, 0.4);">▶</button>
         </div>
         <audio id="favMusic" loop src=""></audio>
-    </div>
-
-    <!-- SURPRISE OVERLAY -->
-    <div class="surprise-overlay" id="surpriseOverlay">
-        <div class="surprise-content">
-            <h2>You unlocked a reward!</h2>
-            <div class="ticket-wrapper">
-                <div class="ticket-inner">
-                    <span class="ticket-icon" id="ticketIcon">🎟️</span>
-                    <div class="ticket-title" id="ticketTitle">Cosmic Coupon</div>
-                    <div class="ticket-text" id="ticketText">Good for 1 Movie Night where you choose all the snacks! 🍿</div>
-                </div>
-            </div>
-            <button class="close-surprise" id="closeSurprise">Claim Coupon ✨</button>
-        </div>
     </div>
 
     <script>
@@ -864,15 +796,7 @@
 
             // Visual elements
             particleCount: 200,
-            rainHeartCount: 18,
-
-            // Coupons & Rewards
-            surprises: [
-                { icon: "🎟️", title: "Cozy Coupon", text: "Good for 1 Movie Night where I buy all the snacks and you choose the movie! 🍿" },
-                { icon: "💫", title: "Universal Truth", text: "U are the absolute prettiest girl." },
-                { icon: "🤗", title: "Warp Hug", text: "Redeemable anytime u want. It'll be a long, bone-crushing hug! ❤️" },
-                { icon: "👑", title: "Princess Treatment", text: "Good for 1 whole day of me doing whatever U say without any complaints! 💆‍♀️" }
-            ]
+            rainHeartCount: 18
         };
 
         // --- Parse LRC-formatted lyrics ([mm:ss.xx]text) into {time, text} objects ---
@@ -900,7 +824,6 @@
         // ============================================================
 
         const nameEl = document.getElementById('herName');
-        const surpriseBtn = document.getElementById('surpriseBtn');
         const favSongBtn = document.getElementById('favSongBtn');
         const card = document.getElementById('mainCard');
         const songCard = document.getElementById('songCard');
@@ -910,11 +833,7 @@
         const deliveryScreen = document.getElementById('delivery-screen');
         const secretCodeInput = document.getElementById('secretCodeInput');
         const errorMsg = document.getElementById('errorMsg');
-
-        // Teleport Button Elements
-        const openGiftBtn = document.getElementById('openGiftBtn');
-        const dontClickBtn = document.getElementById('dontClickBtn');
-        let openBtnScale = 1;
+        const dialReadout = document.getElementById('dialReadout');
 
         // Audio elements (Song 1)
         const bgMusic = document.getElementById('bgMusic');
@@ -934,13 +853,6 @@
         const giantPlayerDisc = document.getElementById('giantPlayerDisc');
         const favSongTitle = document.getElementById('favSongTitle');
         const favSongArtist = document.getElementById('favSongArtist');
-
-        // Surprise Overlay
-        const surpriseOverlay = document.getElementById('surpriseOverlay');
-        const closeSurprise = document.getElementById('closeSurprise');
-        const ticketIcon = document.getElementById('ticketIcon');
-        const ticketTitle = document.getElementById('ticketTitle');
-        const ticketText = document.getElementById('ticketText');
 
         let authenticated = false;
 
@@ -1012,6 +924,7 @@
             if (entered === correct) {
                 authenticated = true;
                 errorMsg.style.display = 'none';
+                if (dialReadout) dialReadout.textContent = 'SIGNAL LOCKED ✓';
 
                 lockScreen.style.opacity = '0';
                 lockScreen.style.transform = 'scale(0.9) translateY(-20px)';
@@ -1028,40 +941,14 @@
                 spawnRandomHearts(10, '✨');
             } else {
                 errorMsg.style.display = 'block';
-                secretCodeInput.style.borderColor = '#ff4a7d';
+                if (dialReadout) dialReadout.textContent = 'STATIC — WRONG FREQUENCY';
+                secretCodeInput.style.borderColor = '#ff5c5c';
                 setTimeout(() => {
-                    secretCodeInput.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                    secretCodeInput.style.borderColor = 'rgba(255, 200, 150, 0.16)';
+                    if (dialReadout) dialReadout.textContent = 'OUR PRIVATE FREQUENCY 💛';
                 }, 1500);
             }
         }
-
-        // --- Evasive Button Action ---
-        dontClickBtn.addEventListener('click', () => {
-            if (dontClickBtn.parentElement !== document.body) {
-                document.body.appendChild(dontClickBtn);
-            }
-
-            openBtnScale += 0.25;
-            openGiftBtn.style.transform = `scale(${openBtnScale})`;
-
-            dontClickBtn.style.position = 'fixed';
-            dontClickBtn.style.margin = '0';
-            dontClickBtn.style.zIndex = '1000';
-
-            const btnWidth = dontClickBtn.offsetWidth || 150;
-            const btnHeight = dontClickBtn.offsetHeight || 45;
-
-            const maxX = window.innerWidth - btnWidth - 20;
-            const maxY = window.innerHeight - btnHeight - 20;
-
-            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
-
-            dontClickBtn.style.left = randomX + 'px';
-            dontClickBtn.style.top = randomY + 'px';
-
-            spawnHeart(randomX + btnWidth / 2, randomY + btnHeight / 2, '🫣');
-        });
 
         // --- Unwrapping & Main Card Reveal ---
         function openMessage() {
@@ -1069,7 +956,6 @@
 
             deliveryScreen.style.opacity = '0';
             deliveryScreen.style.transform = 'scale(0.9) translateY(-20px)';
-            dontClickBtn.style.display = 'none';
 
             setTimeout(() => {
                 deliveryScreen.style.display = 'none';
@@ -1088,7 +974,7 @@
             }, 600);
 
             spawnRandomHearts(25, '✨');
-            spawnRandomHearts(15, '💖');
+            spawnRandomHearts(15, '🧡');
         }
 
         // --- Audio Controls ---
@@ -1204,39 +1090,11 @@
         }
 
         document.addEventListener('click', (e) => {
-            const target = e.target.closest('button, .close-surprise, .glass-panel, .lyric-line');
+            const target = e.target.closest('button, .glass-panel, .lyric-line');
             if (target) return;
-            const emojis = ['💕', '❤️', '✨', '🌸', '💖', '💗', '🩷'];
+            const emojis = ['🧡', '✨', '🎶', '💛', '🔥', '💕'];
             const emoji = emojis[Math.floor(Math.random() * emojis.length)];
             spawnHeart(e.clientX, e.clientY, emoji);
-        });
-
-        // --- Surprise Button Overlay ---
-        surpriseBtn.addEventListener('click', () => {
-            document.body.classList.add('warp');
-            
-            const selection = CONFIG.surprises[Math.floor(Math.random() * CONFIG.surprises.length)];
-            ticketIcon.textContent = selection.icon;
-            ticketTitle.textContent = selection.title;
-            ticketText.textContent = selection.text;
-
-            const confettiEmojis = ['🎉', '✨', '🌟', '💫', '🎁', '🎟️', '🌸', '💖', '🍿', '👑', '🤗'];
-            for (let i = 0; i < 45; i++) {
-                const emoji = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                setTimeout(() => spawnHeart(x, y, emoji), i * 35);
-            }
-
-            setTimeout(() => {
-                surpriseOverlay.classList.add('show');
-                document.body.classList.remove('warp');
-            }, 600);
-        });
-
-        closeSurprise.addEventListener('click', () => surpriseOverlay.classList.remove('show'));
-        surpriseOverlay.addEventListener('click', (e) => {
-            if (e.target === surpriseOverlay) surpriseOverlay.classList.remove('show');
         });
 
         // --- Background Stars & Rain ---
@@ -1259,7 +1117,7 @@
 
         function createHeartRain() {
             const count = CONFIG.rainHeartCount;
-            const emojis = ['♥', '♡', '❤', '💕', '💗'];
+            const emojis = ['♪', '♫', '♬', '✦', '✧'];
             for (let i = 0; i < count; i++) {
                 const span = document.createElement('span');
                 span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
@@ -1272,10 +1130,6 @@
             }
         }
         createHeartRain();
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') surpriseOverlay.classList.remove('show');
-        });
     </script>
 
 </body>
