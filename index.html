@@ -549,6 +549,33 @@
             border-width: 4px;
         }
 
+        /* ----- AUDIO-REACTIVE EQ PANEL (flip-side page) ----- */
+        .eq-panel {
+            background-image:
+                repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
+                linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42));
+            border-radius: 24px;
+            border: 1px solid rgba(255, 180, 120, 0.14);
+            box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.5);
+            height: 140px;
+            margin: 0 0 1.8rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5px;
+            padding: 16px 16px 14px;
+        }
+
+        .eq-bar {
+            flex: 1;
+            min-width: 3px;
+            height: 4px;
+            border-radius: 3px 3px 0 0;
+            background: linear-gradient(to top, var(--ember), var(--gold));
+            box-shadow: 0 0 8px rgba(255, 150, 60, 0.35);
+            transition: height 0.09s ease;
+        }
+
         /* ----- FLOATING HEARTS (click spawn) ----- */
         .spawn-heart {
             position: fixed;
@@ -617,6 +644,11 @@
             .player-disc.giant-disc::after {
                 width: 38px;
                 height: 38px;
+            }
+            .eq-panel {
+                height: 100px;
+                gap: 3px;
+                padding: 12px 10px 10px;
             }
         }
     </style>
@@ -701,6 +733,8 @@
             <h2 id="favSongTitle" style="color: #fff; font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255, 155, 203, 0.4);">Loading song...</h2>
             <p id="favSongArtist" style="color: rgba(255, 255, 255, 0.6); font-size: 1.1rem; font-weight: 600;">Please wait</p>
         </div>
+
+        <div class="eq-panel" id="eqPanel"></div>
 
         <div style="display: flex; justify-content: center; align-items: center;">
             <button class="play-pause-btn" id="favPlayPauseBtn" onclick="toggleFavPlay()" style="width: 60px; height: 60px; font-size: 1.6rem; background: rgba(255, 107, 157, 0.2); border: 1px solid rgba(255, 107, 157, 0.4);">▶</button>
@@ -854,6 +888,14 @@
         const favSongTitle = document.getElementById('favSongTitle');
         const favSongArtist = document.getElementById('favSongArtist');
 
+        // Audio-reactive EQ visualizer (flip-side page)
+        const eqPanel = document.getElementById('eqPanel');
+        const EQ_BAR_COUNT = 26;
+        let eqBars = [];
+        let audioCtx = null;
+        let favAnalyser = null;
+        let favDataArray = null;
+
         let authenticated = false;
 
         // --- Initialize Page Config ---
@@ -884,6 +926,65 @@
             });
         }
         renderSyncedLyrics();
+
+        // --- Build the EQ bars (flip-side visualizer) ---
+function renderEqBars() {
+    eqPanel.innerHTML = '';
+    eqBars = [];
+    for (let i = 0; i < EQ_BAR_COUNT; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'eq-bar';
+        eqPanel.appendChild(bar);
+        eqBars.push(bar);
+    }
+}
+renderEqBars();
+
+// --- Lazily wire up a Web Audio analyser on favMusic (first play only) ---
+function ensureFavAudioGraph() {
+    if (audioCtx) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return;
+    }
+    try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        favAnalyser = audioCtx.createAnalyser();
+        favAnalyser.fftSize = 64; // 32 frequency bins — chunky, punchy bars
+        favDataArray = new Uint8Array(favAnalyser.frequencyBinCount);
+
+        const favSource = audioCtx.createMediaElementSource(favMusic);
+        favSource.connect(favAnalyser);
+        favAnalyser.connect(audioCtx.destination); // keep audio audible
+    } catch (err) {
+        console.log('Audio analyser unavailable, falling back to ambient EQ:', err);
+        audioCtx = null;
+        favAnalyser = null;
+    }
+}
+
+// --- EQ animation loop (real frequency data, with a graceful fallback) ---
+function animateEq() {
+    if (!favMusic.paused) {
+        if (favAnalyser) {
+            favAnalyser.getByteFrequencyData(favDataArray);
+            eqBars.forEach((bar, i) => {
+                const value = favDataArray[i % favDataArray.length] || 0;
+                const pct = value / 255;
+                bar.style.height = (4 + pct * 108) + 'px';
+            });
+        } else {
+            const t = Date.now() / 220;
+            eqBars.forEach((bar, i) => {
+                const wave = Math.sin(t + i * 0.45) * 0.5 + 0.5;
+                bar.style.height = (4 + wave * 90) + 'px';
+            });
+        }
+    } else {
+        eqBars.forEach(bar => { bar.style.height = '4px'; });
+        }
+        requestAnimationFrame(animateEq);
+    }
+        requestAnimationFrame(animateEq);
 
         // --- Audio Time Update Listener (Spotify-style Sync & Auto-scroll) ---
         bgMusic.addEventListener('timeupdate', () => {
@@ -1002,6 +1103,7 @@
                     playPauseBtn.textContent = '▶';
                     playerDisc.classList.remove('playing');
                 }
+                ensureFavAudioGraph();
                 favMusic.play();
                 favPlayPauseBtn.textContent = '⏸';
                 giantPlayerDisc.classList.add('playing');
@@ -1028,6 +1130,7 @@
                 setTimeout(() => {
                     songCard.style.opacity = '1';
                     songCard.style.transform = 'scale(1)';
+                    ensureFavAudioGraph();
                     favMusic.play().then(() => {
                         favPlayPauseBtn.textContent = '⏸';
                         giantPlayerDisc.classList.add('playing');
